@@ -21,7 +21,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import Paper from "@mui/material/Paper";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import loginCover from "../../src/assets/images/login.jpg";
+import loginCover from "../../assets/images/images.jpeg";
 import { useTheme } from "@mui/material/styles";
 import { Link as RouterLink } from "react-router-dom";
 import MuiLink from "@mui/material/Link";
