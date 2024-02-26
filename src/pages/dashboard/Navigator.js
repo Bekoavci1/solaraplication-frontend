@@ -17,32 +17,56 @@ import SettingsInputComponentIcon from '@mui/icons-material/SettingsInputCompone
 import TimerIcon from '@mui/icons-material/Timer';
 import SettingsIcon from '@mui/icons-material/Settings';
 import PhonelinkSetupIcon from '@mui/icons-material/PhonelinkSetup';
+import Brightness5Icon from '@mui/icons-material/Brightness5';
+import ArchitectureIcon from '@mui/icons-material/Architecture';
+import SupportAgentIcon from '@mui/icons-material/SupportAgent';
+import { Link } from 'react-router-dom';
+
+
 
 const categories = [
   {
-    id: 'Build',
+    id: 'Main',
     children: [
       {
-        id: 'Home Page',
-        icon: <PeopleIcon />,
+        id: 'Dashboard',
+        icon: <HomeIcon />,
         active: true,
       },
-      { id: 'Database', icon: <DnsRoundedIcon /> },
-      { id: 'Drawing', icon: <PermMediaOutlinedIcon /> },
-      // { id: 'Hosting', icon: <PublicIcon /> },
-      // { id: 'Functions', icon: <SettingsEthernetIcon /> },
       {
-        id: 'Machine learning',
-        icon: <SettingsInputComponentIcon />,
+        id: 'Leads',
+        icon: <Brightness5Icon />,
+        
+      },
+      {
+        id: 'Drawing',
+        icon: <ArchitectureIcon />,
+      },
+      {
+        id: 'Customer',
+        icon: <PermMediaOutlinedIcon />,
       },
     ],
   },
   {
-    id: 'Quality',
+    id: 'Settings',
     children: [
-      { id: 'Settings', icon: <SettingsIcon /> },
-      { id: 'Performance', icon: <TimerIcon /> },
-      { id: 'Log Out', icon: <PhonelinkSetupIcon /> },
+      {
+        id: 'Settings',
+        icon: <SettingsIcon />,
+      },
+      {
+        id: 'Roles & Permissions',
+        icon: <SettingsEthernetIcon />,
+      },
+      {
+        id: 'Global Settings',
+        icon: <SupportAgentIcon />,
+      },
+      {
+        id: 'User List',
+        icon: <PhonelinkSetupIcon />,
+      },
     ],
   },
 ];
@@ -69,7 +93,7 @@ export default function Navigator(props) {
     <Drawer variant="permanent" {...other}>
       <List disablePadding>
         <ListItem sx={{ ...item, ...itemCategory, fontSize: 22, color: '#fff' }}>
-          Paperbase
+          Solar App
         </ListItem>
         <ListItem sx={{ ...item, ...itemCategory }}>
           <ListItemIcon>
@@ -84,7 +108,12 @@ export default function Navigator(props) {
             </ListItem>
             {children.map(({ id: childId, icon, active }) => (
               <ListItem disablePadding key={childId}>
-                <ListItemButton selected={active} sx={item}>
+                <ListItemButton
+                  component={Link} 
+                  to={`/${childId.toLowerCase()}`} 
+                  selected={active}
+                  sx={item}
+                >
                   <ListItemIcon>{icon}</ListItemIcon>
                   <ListItemText>{childId}</ListItemText>
                 </ListItemButton>

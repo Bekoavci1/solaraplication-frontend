@@ -13,9 +13,6 @@ function Copyright() {
   return (
     <Typography variant="body2" color="text.secondary" align="center">
       {'Solar Energy App © '}
-      {/* <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{' '} */}
       {new Date().getFullYear()}.
     </Typography>
   );
