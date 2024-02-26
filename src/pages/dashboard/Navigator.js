@@ -23,14 +23,14 @@ const categories = [
     id: 'Build',
     children: [
       {
-        id: 'Authentication',
+        id: 'Home Page',
         icon: <PeopleIcon />,
         active: true,
       },
       { id: 'Database', icon: <DnsRoundedIcon /> },
-      { id: 'Storage', icon: <PermMediaOutlinedIcon /> },
-      { id: 'Hosting', icon: <PublicIcon /> },
-      { id: 'Functions', icon: <SettingsEthernetIcon /> },
+      { id: 'Drawing', icon: <PermMediaOutlinedIcon /> },
+      // { id: 'Hosting', icon: <PublicIcon /> },
+      // { id: 'Functions', icon: <SettingsEthernetIcon /> },
       {
         id: 'Machine learning',
         icon: <SettingsInputComponentIcon />,
@@ -40,9 +40,9 @@ const categories = [
   {
     id: 'Quality',
     children: [
-      { id: 'Analytics', icon: <SettingsIcon /> },
+      { id: 'Settings', icon: <SettingsIcon /> },
       { id: 'Performance', icon: <TimerIcon /> },
-      { id: 'Test Lab', icon: <PhonelinkSetupIcon /> },
+      { id: 'Log Out', icon: <PhonelinkSetupIcon /> },
     ],
   },
 ];

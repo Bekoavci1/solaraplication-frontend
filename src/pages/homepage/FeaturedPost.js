@@ -6,7 +6,6 @@ import Card from '@mui/material/Card';
 import CardActionArea from '@mui/material/CardActionArea';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
-import { green, red } from '@mui/material/colors';
 
 function FeaturedPost(props) {
   const { post } = props;
