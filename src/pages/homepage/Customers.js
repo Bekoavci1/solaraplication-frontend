@@ -23,6 +23,8 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 import { Button } from '@mui/material';
+import { Link } from 'react-router-dom';
+
 
 function createData(id, name, company_name, email, address, vat_number, vat_office, phone, mobile, notes) {
   return {
@@ -251,6 +253,8 @@ function EnhancedTableToolbar(props) {
           variant="outlined"
           startIcon={<AddCircleIcon />}
           sx={{ ml: 1 }}
+          component={Link}
+          to="/addcustomer"
         >
           <Typography>Add</Typography>
           &nbsp;

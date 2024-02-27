@@ -180,6 +180,8 @@ export default function Paperbase() {
     if (tabValue === 0) {
     } else if (tabValue === 1) {
     }
+    else if (tabValue === 2) {
+    }
   };
 
  
@@ -208,7 +210,8 @@ export default function Paperbase() {
         <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
         <Header onDrawerToggle={handleDrawerToggle} onTabChange={handleTabChange} />
           <Box component="main" sx={{ flex: 1, py: 6, px: 4, bgcolor: '#eaeff1' }}>
-          {selectedTab === 0 ? <Content /> : <Customers />} 
+             {selectedTab === 0 ? <Content /> : null}
+            {selectedTab === 1 ? <Customers /> : null}
           </Box>
           <Box component="footer" sx={{ p: 2, bgcolor: '#eaeff1' }}>
             <Copyright />
