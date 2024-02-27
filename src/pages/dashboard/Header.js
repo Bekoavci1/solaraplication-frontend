@@ -15,17 +15,30 @@ import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import Divider from '@mui/material/Divider'; 
+
 
 const lightColor = 'rgba(255, 255, 255, 0.7)';
 
 function Header(props) {
-  const { onDrawerToggle } = props;
+  const { onDrawerToggle, onTabChange } = props;
+  const [selectedTab, setSelectedTab] = useState(0);
+
+  const handleChangeTab = (event, newValue) => {
+    setSelectedTab(newValue);
+
+    if (onTabChange) {
+      onTabChange(newValue);
+    }
+  };
+
   const onProfileClick = () => {
     window.location.href = '/profile'; 
   };
   const onLogoutClick = () => {
     window.location.href = '/';
   };
+ 
   
   const [anchorEl, setAnchorEl] = useState(null);
   const isMenuOpen = Boolean(anchorEl);
@@ -41,7 +54,12 @@ function Header(props) {
   return (
     <React.Fragment>
       <AppBar color="primary" position="sticky" elevation={0}>
+        
         <Toolbar>
+        <Typography color="inherit" variant="h5" component="h1">
+                Welcome
+              </Typography>
+          
           <Grid container spacing={1} alignItems="center">
             <Grid sx={{ display: { sm: 'none', xs: 'block' } }} item>
               <IconButton
@@ -84,38 +102,27 @@ function Header(props) {
                     <MenuItem onClick={onLogoutClick}>Logout</MenuItem>
                 </Menu>
             </Grid>
+            
           </Grid>
+         
         </Toolbar>
+       
+      
       </AppBar>
-      <AppBar
-        component="div"
-        color="primary"
-        position="static"
-        elevation={0}
-        sx={{ zIndex: 0 }}
-      >
-        <Toolbar>
-          <Grid container alignItems="center" spacing={1}>
-            <Grid item xs>
-              <Typography color="inherit" variant="h5" component="h1">
-                Welcome
-              </Typography>
-            </Grid>
-          </Grid>
-        </Toolbar>
-      </AppBar>
-      <AppBar component="div" position="static" elevation={0} sx={{ zIndex: 0 }}>
-        <Tabs value={0} textColor="inherit">
-          <Tab label="Users" />
-
-        </Tabs>
-      </AppBar>
+      <Divider /> 
+      <AppBar style={{ alignItems: 'center' }} component="div" position="static" elevation={0} sx={{ zIndex: 0 }}>
+      <Tabs value={selectedTab} textColor="inherit" onChange={handleChangeTab}>
+            <Tab label="Projects" style={{ fontSize: '20px' }} />
+            <Tab label="Customers" style={{ fontSize: '20px' }} />
+      </Tabs>
+    </AppBar>
     </React.Fragment>
   );
 }
 
 Header.propTypes = {
   onDrawerToggle: PropTypes.func.isRequired,
+  onTabChange: PropTypes.func,
 };
 
 export default Header;

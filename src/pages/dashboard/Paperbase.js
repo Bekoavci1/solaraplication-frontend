@@ -8,6 +8,8 @@ import Link from '@mui/material/Link';
 // import Navigator from './Navigator';
 import Content from './Content';
 import Header from './Header';
+import Customers from '../homepage/Customers';
+import { useState } from 'react';
 
 function Copyright() {
   return (
@@ -166,11 +168,21 @@ const drawerWidth = 256;
 export default function Paperbase() {
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const isSmUp = useMediaQuery(theme.breakpoints.up('sm'));
+  const [selectedTab, setSelectedTab] = useState(0);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
 
+  const handleTabChange = (tabValue) => {
+    setSelectedTab(tabValue);
+
+    if (tabValue === 0) {
+    } else if (tabValue === 1) {
+    }
+  };
+
+ 
   return (
     <ThemeProvider theme={theme}>
       <Box sx={{ display: 'flex', minHeight: '100vh' }}>
@@ -194,9 +206,9 @@ export default function Paperbase() {
           />
         </Box> */}
         <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-          <Header onDrawerToggle={handleDrawerToggle} />
+        <Header onDrawerToggle={handleDrawerToggle} onTabChange={handleTabChange} />
           <Box component="main" sx={{ flex: 1, py: 6, px: 4, bgcolor: '#eaeff1' }}>
-            <Content />
+          {selectedTab === 0 ? <Content /> : <Customers />} 
           </Box>
           <Box component="footer" sx={{ p: 2, bgcolor: '#eaeff1' }}>
             <Copyright />
