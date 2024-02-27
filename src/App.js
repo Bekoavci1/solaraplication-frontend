@@ -4,9 +4,7 @@ import Blog from './pages/homepage/Blog';
 import LoginPage from '../src/pages/login-register/LoginPage'
 import RegisterPage from '../src/pages/login-register/RegisterPage'
 import Paperbase from './pages/dashboard/Paperbase';
-import LeadsPage from './pages/dashboard/LeadsPage'
-// import Content from './pages/dashboard/Content';
-
+import Profile from './pages/dashboard/Profile'
 
 function App() {
   return (
@@ -17,7 +15,8 @@ function App() {
         <Route path="/login" element={<LoginPage/>} />
         <Route path="/sign-up" element={<RegisterPage/>} />
         <Route path="/paperbase" element={<Paperbase/>} />
-        <Route path="/leads" element={<LeadsPage/>} />
+        <Route path="/profile" element={<Profile/>} />
+
         {/* <Route path="/content" element={<Content/>} /> */}
       </Routes>
     </Router>

@@ -4,7 +4,6 @@ import AppBar from '@mui/material/AppBar';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
-import HelpIcon from '@mui/icons-material/Help';
 import IconButton from '@mui/material/IconButton';
 import Link from '@mui/material/Link';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -21,6 +20,13 @@ const lightColor = 'rgba(255, 255, 255, 0.7)';
 
 function Header(props) {
   const { onDrawerToggle } = props;
+  const onProfileClick = () => {
+    window.location.href = '/profile'; 
+  };
+  const onLogoutClick = () => {
+    window.location.href = '/';
+  };
+  
   const [anchorEl, setAnchorEl] = useState(null);
   const isMenuOpen = Boolean(anchorEl);
 
@@ -48,23 +54,6 @@ function Header(props) {
               </IconButton>
             </Grid>
             <Grid item xs />
-            {/* <Grid item>
-              <Link
-                href="/"
-                variant="body2"
-                sx={{
-                  textDecoration: 'none',
-                  color: lightColor,
-                  '&:hover': {
-                    color: 'common.white',
-                  },
-                }}
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                Go to docs
-              </Link>
-            </Grid> */}
             <Grid item>
               <Tooltip title="Alerts • No alerts">
                 <IconButton color="inherit">
@@ -90,8 +79,9 @@ function Header(props) {
                     open={isMenuOpen}
                     onClose={handleMenuClose}
                 >
-                    <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-                    <MenuItem onClick={handleMenuClose}>Logout</MenuItem>
+                    <MenuItem onClick={onProfileClick}>Profile</MenuItem>
+
+                    <MenuItem onClick={onLogoutClick}>Logout</MenuItem>
                 </Menu>
             </Grid>
           </Grid>
@@ -111,32 +101,13 @@ function Header(props) {
                 Welcome
               </Typography>
             </Grid>
-            <Grid item>
-              <Button
-                sx={{ borderColor: lightColor }}
-                variant="outlined"
-                color="inherit"
-                size="small"
-              >
-                Web setup
-              </Button>
-            </Grid>
-            <Grid item>
-              <Tooltip title="Help">
-                <IconButton color="inherit">
-                  <HelpIcon />
-                </IconButton>
-              </Tooltip>
-            </Grid>
           </Grid>
         </Toolbar>
       </AppBar>
       <AppBar component="div" position="static" elevation={0} sx={{ zIndex: 0 }}>
         <Tabs value={0} textColor="inherit">
           <Tab label="Users" />
-          {/* <Tab label="Sign-in method" />
-          <Tab label="Templates" />
-          <Tab label="Usage" /> */}
+
         </Tabs>
       </AppBar>
     </React.Fragment>
