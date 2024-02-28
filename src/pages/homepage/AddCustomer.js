@@ -167,7 +167,7 @@ export default function AddCustomer() {
             background: "#eaeff1",
             justifyContent: "center",
             alignItems: "center",
-            height: "100vh",
+            height: "98%",
           }}
         >
           <Box
@@ -177,12 +177,13 @@ export default function AddCustomer() {
             background: "#eaeff1",
             justifyContent: "center",
             alignItems: "center",
-            height: "100vh",
+            height: "100%",
+            width: "100%",
           }}
             
             alt="The house from the offer."
-            src="https://s1.cdn.autoevolution.com/images/news/three-new-google-maps-features-that-make-other-navigation-app-looks-outdated-194822_1.jpg"
-          />
+            src="https://f.hubspotusercontent30.net/hubfs/6069238/images/blogs/meauring-roofs.jpg"
+  />
         </Box>
       </Grid>
     </Grid>
