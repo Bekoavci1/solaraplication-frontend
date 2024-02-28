@@ -29,7 +29,9 @@ function Profile({ onCancel }) {
   const handleCancel = () => {
     // onCancel prop'u ile sayfayı geri döndürme işlevi sağlanmalı
     console.log('Cancel clicked');
-    onCancel(); // onCancel fonksiyonu ile geri dönme işlevi
+    if (onCancel) {
+      onCancel(); // onCancel fonksiyonu ile geri dönme işlevi
+    }
   };
 
   const handleUpdatePassword = () => {
