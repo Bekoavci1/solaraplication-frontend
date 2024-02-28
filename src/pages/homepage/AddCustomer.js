@@ -1,8 +1,7 @@
 import React from "react";
 import { Box, Divider, Grid, Stack, Typography } from "@mui/material";
 import TextField from "@mui/material/TextField";
-import { Button } from '@mui/material';
-
+import { Button } from "@mui/material";
 
 export default function AddCustomer() {
   return (
@@ -57,22 +56,21 @@ export default function AddCustomer() {
           </Typography>
 
           <Stack style={{ width: "40vh" }} direction="column">
-          <TextField
+            <TextField
               id="standard-search"
               label="Street"
               type="search"
               variant="standard"
             />
-            </Stack>
-           
-    <Stack direction="row">
+          </Stack>
+
+          <Stack direction="row">
             <TextField
               id="standard-search"
               label="House Number"
               type="search"
               variant="standard"
               sx={{ marginRight: 2 }}
-
             />
             <TextField
               id="standard-search"
@@ -82,15 +80,12 @@ export default function AddCustomer() {
             />
           </Stack>
           <Stack direction="row">
-            
-
             <TextField
               id="standard-search"
               label="City"
               type="search"
               variant="standard"
               sx={{ marginRight: 2 }}
-
             />
             <TextField
               id="standard-search"
@@ -100,8 +95,6 @@ export default function AddCustomer() {
             />
           </Stack>
           <Stack style={{ width: "40vh" }} direction="column">
-            
-
             <TextField
               id="standard-search"
               label="Addition"
@@ -161,12 +154,9 @@ export default function AddCustomer() {
               rows={4}
             />
           </Stack>
-          <Button
-          variant="contained"
-          sx={{ marginTop:"2vh", width:"40vh"}}
-        >
-          <Typography>Save</Typography>
-        </Button>
+          <Button variant="contained" sx={{ marginTop: "2vh", width: "40vh" }}>
+            <Typography>Save</Typography>
+          </Button>
         </Box>
       </Grid>
 
@@ -180,7 +170,19 @@ export default function AddCustomer() {
             height: "100vh",
           }}
         >
-          <h1>Map</h1>
+          <Box
+            component="img"
+            sx={{
+            display: "flex",
+            background: "#eaeff1",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100vh",
+          }}
+            
+            alt="The house from the offer."
+            src="https://s1.cdn.autoevolution.com/images/news/three-new-google-maps-features-that-make-other-navigation-app-looks-outdated-194822_1.jpg"
+          />
         </Box>
       </Grid>
     </Grid>
