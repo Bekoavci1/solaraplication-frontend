@@ -10,6 +10,8 @@ import Content from './Content';
 import Header from './Header';
 import Customers from '../homepage/Customers';
 import { useState } from 'react';
+import AddCustomer from '../homepage/AddCustomer';
+import { useLocation } from 'react-router-dom';
 
 function Copyright() {
   return (
@@ -165,10 +167,14 @@ theme = {
 
 const drawerWidth = 256;
 
-export default function Paperbase() {
+export default function Paperbase(props) {
+
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const isSmUp = useMediaQuery(theme.breakpoints.up('sm'));
   const [selectedTab, setSelectedTab] = useState(0);
+
+
+
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -184,7 +190,12 @@ export default function Paperbase() {
     }
   };
 
- 
+  React.useEffect(() => {
+    
+    console.log("props",props.value)
+
+  }, [props.value]);
+  
   return (
     <ThemeProvider theme={theme}>
       <Box sx={{ display: 'flex', minHeight: '100vh' }}>
@@ -210,8 +221,9 @@ export default function Paperbase() {
         <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
         <Header onDrawerToggle={handleDrawerToggle} onTabChange={handleTabChange} />
           <Box component="main" sx={{ flex: 1, py: 6, px: 4, bgcolor: '#eaeff1' }}>
-             {selectedTab === 0 ? <Content /> : null}
+            {selectedTab === 0 ? <Content /> : null}
             {selectedTab === 1 ? <Customers /> : null}
+            { props.value === "addCustomer" ? <AddCustomer /> : null}
           </Box>
           <Box component="footer" sx={{ p: 2, bgcolor: '#eaeff1' }}>
             <Copyright />

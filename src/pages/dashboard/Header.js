@@ -1,24 +1,24 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
-import AppBar from '@mui/material/AppBar';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import Grid from '@mui/material/Grid';
-import IconButton from '@mui/material/IconButton';
-import Link from '@mui/material/Link';
-import MenuIcon from '@mui/icons-material/Menu';
-import NotificationsIcon from '@mui/icons-material/Notifications';
-import Tab from '@mui/material/Tab';
-import Tabs from '@mui/material/Tabs';
-import Toolbar from '@mui/material/Toolbar';
-import Tooltip from '@mui/material/Tooltip';
-import Typography from '@mui/material/Typography';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-import Divider from '@mui/material/Divider'; 
+import React, { useState } from "react";
+import PropTypes from "prop-types";
+import AppBar from "@mui/material/AppBar";
+import Avatar from "@mui/material/Avatar";
+import Button from "@mui/material/Button";
+import Grid from "@mui/material/Grid";
+import IconButton from "@mui/material/IconButton";
+import Link from "@mui/material/Link";
+import MenuIcon from "@mui/icons-material/Menu";
+import NotificationsIcon from "@mui/icons-material/Notifications";
+import Tab from "@mui/material/Tab";
+import Tabs from "@mui/material/Tabs";
+import Toolbar from "@mui/material/Toolbar";
+import Tooltip from "@mui/material/Tooltip";
+import Typography from "@mui/material/Typography";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import Divider from "@mui/material/Divider";
+import { useLocation } from "react-router-dom";
 
-
-const lightColor = 'rgba(255, 255, 255, 0.7)';
+const lightColor = "rgba(255, 255, 255, 0.7)";
 
 function Header(props) {
   const { onDrawerToggle, onTabChange } = props;
@@ -31,15 +31,20 @@ function Header(props) {
       onTabChange(newValue);
     }
   };
-
+  const handleChangeAltTab = (event, newValue) => {
+    setSelectedTab(newValue);
+    console.log("sdaa", newValue)
+    if (onTabChange) {
+      onTabChange(newValue);
+    }
+  };
   const onProfileClick = () => {
-    window.location.href = '/profile'; 
+    window.location.href = "/profile";
   };
   const onLogoutClick = () => {
-    window.location.href = '/';
+    window.location.href = "/";
   };
- 
-  
+
   const [anchorEl, setAnchorEl] = useState(null);
   const isMenuOpen = Boolean(anchorEl);
 
@@ -51,17 +56,22 @@ function Header(props) {
     setAnchorEl(null);
   };
 
+  const [tabs, setTabs] = useState([
+    { label: "Projects", id: "projects" },
+    { label: "Customers", id: "customers" },
+  ]);
+
+  const [altTabs, setAltTabs] = useState([{ label: "Add Customer", id: "addCustomer" }]);
   return (
     <React.Fragment>
       <AppBar color="primary" position="sticky" elevation={0}>
-        
         <Toolbar>
-        <Typography color="inherit" variant="h5" component="h1">
-                Welcome
-              </Typography>
-          
+          <Typography color="inherit" variant="h5" component="h1">
+            Welcome
+          </Typography>
+
           <Grid container spacing={1} alignItems="center">
-            <Grid sx={{ display: { sm: 'none', xs: 'block' } }} item>
+            <Grid sx={{ display: { sm: "none", xs: "block" } }} item>
               <IconButton
                 color="inherit"
                 aria-label="open drawer"
@@ -80,42 +90,53 @@ function Header(props) {
               </Tooltip>
             </Grid>
             <Grid item>
-                <IconButton color="inherit" sx={{ p: 0.5 }} onClick={handleMenuOpen}>
-                    <Avatar src="/static/images/avatar/1.jpg" alt="My Avatar" />
-                </IconButton>
-                <Menu
-                    anchorEl={anchorEl}
-                    anchorOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                    }}
-                    keepMounted
-                    transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                    }}
-                    open={isMenuOpen}
-                    onClose={handleMenuClose}
-                >
-                    <MenuItem onClick={onProfileClick}>Profile</MenuItem>
+              <IconButton
+                color="inherit"
+                sx={{ p: 0.5 }}
+                onClick={handleMenuOpen}
+              >
+                <Avatar src="/static/images/avatar/1.jpg" alt="My Avatar" />
+              </IconButton>
+              <Menu
+                anchorEl={anchorEl}
+                anchorOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                open={isMenuOpen}
+                onClose={handleMenuClose}
+              >
+                <MenuItem onClick={onProfileClick}>Profile</MenuItem>
 
-                    <MenuItem onClick={onLogoutClick}>Logout</MenuItem>
-                </Menu>
+                <MenuItem onClick={onLogoutClick}>Logout</MenuItem>
+              </Menu>
             </Grid>
-            
           </Grid>
-         
         </Toolbar>
-       
-      
       </AppBar>
-      <Divider /> 
-      <AppBar style={{ alignItems: 'center' }} component="div" position="static" elevation={0} sx={{ zIndex: 0 }}>
-      <Tabs value={selectedTab} textColor="inherit" onChange={handleChangeTab}>
-            <Tab label="Projects" style={{ fontSize: '20px' }} />
-            <Tab label="Customers" style={{ fontSize: '20px' }} />
-      </Tabs>
-    </AppBar>
+      <Divider />
+      <AppBar
+        style={{ alignItems: "center" }}
+        component="div"
+        position="static"
+        elevation={0}
+        sx={{ zIndex: 0 }}
+      >
+        <Tabs
+          value={selectedTab}
+          textColor="inherit"
+          onChange={handleChangeTab}
+        >
+          {tabs.map((tab) => (
+            <Tab key={tab.id} label={tab.label} style={{ fontSize: "20px" }} />
+          ))}
+        </Tabs>
+      </AppBar>
     </React.Fragment>
   );
 }

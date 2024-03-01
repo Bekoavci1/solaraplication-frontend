@@ -11,8 +11,7 @@ export default function AddCustomer() {
           sx={{
             display: "flex",
             flexDirection: "column",
-            background: "",
-            justifyContent: "center",
+            justifyContent: "",
             alignItems: "center",
             height: "100vh",
           }}
