@@ -8,6 +8,7 @@ import Profile from './pages/dashboard/Profile'
 import Customers from './pages/homepage/Customers'
 import Content from './pages/dashboard/Content'
 import AddCustomer from './pages/homepage/AddCustomer';
+import AddProject from './pages/dashboard/AddProject';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route path= "/customers" element={<Customers/>} />
         <Route path="/projects" element={<Content/>} />
         <Route path="/addcustomer" element={<AddCustomer/>} />
+        <Route path="/add-project" element={<AddProject/>} />
         {/* <Route path="/content" element={<Content/>} /> */}
       </Routes>
     </Router>

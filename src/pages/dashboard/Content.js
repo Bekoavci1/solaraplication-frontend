@@ -86,9 +86,9 @@ export default function Content() {
                 />
               </Grid>
               <Grid item>
-                <Button variant="contained" sx={{ mr: 1 }}>
-                  Add Project
-                </Button>
+              <Button variant="contained" sx={{ mr: 1 }} onClick={() => window.location.href = '/add-project'}>
+                Add Project
+              </Button>
                 <Tooltip title="Reload">
                   <IconButton>
                     <RefreshIcon color="inherit" sx={{ display: 'block' }} />
