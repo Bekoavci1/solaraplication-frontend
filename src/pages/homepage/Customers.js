@@ -31,18 +31,6 @@ import AddCustomer from "./AddCustomer";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 
-
-export default function Customers() {
-  const [order, setOrder] = React.useState("asc");
-  const [orderBy, setOrderBy] = React.useState("calories");
-  const [selected, setSelected] = React.useState([]);
-  const [page, setPage] = React.useState(0);
-  const [dense, setDense] = React.useState(false);
-  const [rowsPerPage, setRowsPerPage] = React.useState(9);
-  const [searchInput, setSearchInput] = React.useState("");
-
-  
-
 function createData(
   id,
   name,
@@ -346,21 +334,15 @@ EnhancedTableHead.propTypes = {
   rowCount: PropTypes.number.isRequired,
 };
 
-const [showAddCustomer, setshowAddCustomer] = React.useState(false);
-
 function EnhancedTableToolbar(props) {
-  const { numSelected, onSearchChange } = props;
+  const { numSelected, onSearchChange,setShowAddCustomer } = props;
 
 
   const handleClickAddCustomer = () => {
     console.log("Add customer clicked");
-
     // Yeni state'i güncelle
-    setshowAddCustomer(true);
+    setShowAddCustomer(true);
   }
-
-  
-
 
   return (
     <Toolbar
@@ -431,7 +413,6 @@ function EnhancedTableToolbar(props) {
           sx={{ ml: 1 }}
           onClick={handleClickAddCustomer}
         >
-
           <Typography>Add</Typography>
           &nbsp;
           <Typography>Customer</Typography>
@@ -444,8 +425,20 @@ function EnhancedTableToolbar(props) {
 EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
   onSearchChange: PropTypes.func.isRequired,
+  setShowAddCustomer: PropTypes.func.isRequired, // Add prop type for setShowAddCustomer
 };
 
+
+export default function Customers() {
+  const [order, setOrder] = React.useState("asc");
+  const [orderBy, setOrderBy] = React.useState("calories");
+  const [selected, setSelected] = React.useState([]);
+  const [page, setPage] = React.useState(0);
+  const [dense, setDense] = React.useState(false);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [searchInput, setSearchInput] = React.useState("");
+  const [showAddCustomer, setShowAddCustomer] = React.useState(false); // Add state for showAddCustomer
+ 
 
 
   const handleRequestSort = (event, property) => {
@@ -518,15 +511,12 @@ EnhancedTableToolbar.propTypes = {
     [filteredRows, order, orderBy, page, rowsPerPage]
   );
 
-  
-
   return (
-    
     <Box sx={{ width: "100%" }}>
-      
+        
         {showAddCustomer ? (
           <>
-          <IconButton onClick={() => setshowAddCustomer(false)}>
+          <IconButton onClick={() => setShowAddCustomer(false)}>
             <ArrowBackIcon />
           </IconButton>
         <AddCustomer/>
@@ -536,6 +526,7 @@ EnhancedTableToolbar.propTypes = {
         <EnhancedTableToolbar
           numSelected={selected.length}
           onSearchChange={handleSearchChange}
+          setShowAddCustomer={setShowAddCustomer}
 
         />
         <TableContainer>
@@ -615,13 +606,8 @@ EnhancedTableToolbar.propTypes = {
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
-
-         
-
       </Paper>
-       )}
-     
+      )}
     </Box>
   );
 }
-
