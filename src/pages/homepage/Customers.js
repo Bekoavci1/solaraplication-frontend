@@ -1,32 +1,60 @@
-import * as React from 'react';
-import PropTypes from 'prop-types';
-import { alpha } from '@mui/material/styles';
-import Box from '@mui/material/Box';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TablePagination from '@mui/material/TablePagination';
-import TableRow from '@mui/material/TableRow';
-import TableSortLabel from '@mui/material/TableSortLabel';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import Paper from '@mui/material/Paper';
-import Checkbox from '@mui/material/Checkbox';
-import IconButton from '@mui/material/IconButton';
-import Tooltip from '@mui/material/Tooltip';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Switch from '@mui/material/Switch';
-import DeleteIcon from '@mui/icons-material/Delete';
-import AddCircleIcon from '@mui/icons-material/AddCircle';
-import FilterListIcon from '@mui/icons-material/FilterList';
-import { visuallyHidden } from '@mui/utils';
-import { Button } from '@mui/material';
-import { Link } from 'react-router-dom';
+import * as React from "react";
+import PropTypes from "prop-types";
+import { alpha } from "@mui/material/styles";
+import Box from "@mui/material/Box";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TablePagination from "@mui/material/TablePagination";
+import TableRow from "@mui/material/TableRow";
+import TableSortLabel from "@mui/material/TableSortLabel";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
+import Paper from "@mui/material/Paper";
+import Checkbox from "@mui/material/Checkbox";
+import IconButton from "@mui/material/IconButton";
+import Tooltip from "@mui/material/Tooltip";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Switch from "@mui/material/Switch";
+import DeleteIcon from "@mui/icons-material/Delete";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
+import FilterListIcon from "@mui/icons-material/FilterList";
+import { visuallyHidden } from "@mui/utils";
+import { Button, TextField } from "@mui/material";
+import { Link } from "react-router-dom";
+import EditIcon from "@mui/icons-material/Edit";
+import SearchIcon from '@mui/icons-material/Search';
+import PaperBase from "../dashboard/Paperbase";
+import AddCustomer from "./AddCustomer";
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 
-function createData(id, name, company_name, email, address, vat_number, vat_office, phone, mobile, notes) {
+
+export default function Customers() {
+  const [order, setOrder] = React.useState("asc");
+  const [orderBy, setOrderBy] = React.useState("calories");
+  const [selected, setSelected] = React.useState([]);
+  const [page, setPage] = React.useState(0);
+  const [dense, setDense] = React.useState(false);
+  const [rowsPerPage, setRowsPerPage] = React.useState(9);
+  const [searchInput, setSearchInput] = React.useState("");
+
+  
+
+function createData(
+  id,
+  name,
+  company_name,
+  email,
+  address,
+  vat_number,
+  vat_office,
+  phone,
+  mobile,
+  notes
+) {
   return {
     id,
     name,
@@ -42,16 +70,126 @@ function createData(id, name, company_name, email, address, vat_number, vat_offi
 }
 
 const rows = [
-    createData(1, 'John Doe', 'ABC Company', 'john.doe@example.com', '123 Main St', '123456789', 'VAT Office 1', '555-1234', '555-5678', 'Some notes about John Doe'),
-    createData(2, 'Jane Smith', 'XYZ Corporation', 'jane.smith@example.com', '456 Oak St', '987654321', 'VAT Office 2', '555-9876', '555-4321', 'Some notes about Jane Smith'),
-    createData(3, 'Alice Johnson', 'LMN Ltd', 'alice.johnson@example.com', '789 Pine St', '456789012', 'VAT Office 3', '555-5678', '555-1234', 'Some notes about Alice Johnson'),
-    createData(4, 'Bob Williams', 'PQR Inc', 'bob.williams@example.com', '101 Cedar St', '345678901', 'VAT Office 4', '555-4321', '555-9876', 'Some notes about Bob Williams'),
-    createData(5, 'Eva Davis', 'UVW Enterprises', 'eva.davis@example.com', '202 Elm St', '234567890', 'VAT Office 5', '555-8765', '555-2109', 'Some notes about Eva Davis'),
-    createData(6, 'Michael Miller', 'LMN Ltd', 'michael.miller@example.com', '303 Oak St', '567890123', 'VAT Office 6', '555-3210', '555-7654', 'Some notes about Michael Miller'),
-    createData(7, 'Emily Davis', 'ABC Company', 'emily.davis@example.com', '404 Pine St', '678901234', 'VAT Office 7', '555-2109', '555-8765', 'Some notes about Emily Davis'),
-    createData(8, 'David Smith', 'PQR Inc', 'david.smith@example.com', '505 Cedar St', '789012345', 'VAT Office 8', '555-7654', '555-3210', 'Some notes about David Smith'),
-    createData(9, 'Sophia Johnson', 'XYZ Corporation', 'sophia.johnson@example.com', '606 Elm St', '890123456', 'VAT Office 9', '555-4321', '555-9876', 'Some notes about Sophia Johnson'),
-    createData(10, 'Matthew Williams', 'UVW Enterprises', 'matthew.williams@example.com', '707 Oak St', '901234567', 'VAT Office 10', '555-9876', '555-4321', 'Some notes about Matthew Williams'),
+  createData(
+    1,
+    "John Doe",
+    "ABC Company",
+    "john.doe@example.com",
+    "123 Main St",
+    "123456789",
+    "VAT Office 1",
+    "555-1234",
+    "555-5678",
+    "Some notes about John Doe"
+  ),
+  createData(
+    2,
+    "Jane Smith",
+    "XYZ Corporation",
+    "jane.smith@example.com",
+    "456 Oak St",
+    "987654321",
+    "VAT Office 2",
+    "555-9876",
+    "555-4321",
+    "Some notes about Jane Smith"
+  ),
+  createData(
+    3,
+    "Alice Johnson",
+    "LMN Ltd",
+    "alice.johnson@example.com",
+    "789 Pine St",
+    "456789012",
+    "VAT Office 3",
+    "555-5678",
+    "555-1234",
+    "Some notes about Alice Johnson"
+  ),
+  createData(
+    4,
+    "Bob Williams",
+    "PQR Inc",
+    "bob.williams@example.com",
+    "101 Cedar St",
+    "345678901",
+    "VAT Office 4",
+    "555-4321",
+    "555-9876",
+    "Some notes about Bob Williams"
+  ),
+  createData(
+    5,
+    "Eva Davis",
+    "UVW Enterprises",
+    "eva.davis@example.com",
+    "202 Elm St",
+    "234567890",
+    "VAT Office 5",
+    "555-8765",
+    "555-2109",
+    "Some notes about Eva Davis"
+  ),
+  createData(
+    6,
+    "Michael Miller",
+    "LMN Ltd",
+    "michael.miller@example.com",
+    "303 Oak St",
+    "567890123",
+    "VAT Office 6",
+    "555-3210",
+    "555-7654",
+    "Some notes about Michael Miller"
+  ),
+  createData(
+    7,
+    "Emily Davis",
+    "ABC Company",
+    "emily.davis@example.com",
+    "404 Pine St",
+    "678901234",
+    "VAT Office 7",
+    "555-2109",
+    "555-8765",
+    "Some notes about Emily Davis"
+  ),
+  createData(
+    8,
+    "David Smith",
+    "PQR Inc",
+    "david.smith@example.com",
+    "505 Cedar St",
+    "789012345",
+    "VAT Office 8",
+    "555-7654",
+    "555-3210",
+    "Some notes about David Smith"
+  ),
+  createData(
+    9,
+    "Sophia Johnson",
+    "XYZ Corporation",
+    "sophia.johnson@example.com",
+    "606 Elm St",
+    "890123456",
+    "VAT Office 9",
+    "555-4321",
+    "555-9876",
+    "Some notes about Sophia Johnson"
+  ),
+  createData(
+    10,
+    "Matthew Williams",
+    "UVW Enterprises",
+    "matthew.williams@example.com",
+    "707 Oak St",
+    "901234567",
+    "VAT Office 10",
+    "555-9876",
+    "555-4321",
+    "Some notes about Matthew Williams"
+  ),
 ];
 
 function descendingComparator(a, b, orderBy) {
@@ -65,15 +203,11 @@ function descendingComparator(a, b, orderBy) {
 }
 
 function getComparator(order, orderBy) {
-  return order === 'desc'
+  return order === "desc"
     ? (a, b) => descendingComparator(a, b, orderBy)
     : (a, b) => -descendingComparator(a, b, orderBy);
 }
 
-// Since 2020 all major browsers ensure sort stability with Array.prototype.sort().
-// stableSort() brings sort stability to non-modern browsers (notably IE11). If you
-// only support modern browsers you can replace stableSort(exampleArray, exampleComparator)
-// with exampleArray.slice().sort(exampleComparator)
 function stableSort(array, comparator) {
   const stabilizedThis = array.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
@@ -88,65 +222,77 @@ function stableSort(array, comparator) {
 
 const headCells = [
   {
-    id: 'name',
+    id: "name",
     numeric: false,
     disablePadding: false,
-    label: 'Name',
+    label: "Name",
   },
   {
-    id: 'company_name',
+    id: "company_name",
     numeric: false,
     disablePadding: false,
-    label: 'Company Name',
+    label: "Company Name",
   },
-    {
-    id: 'email',
+  {
+    id: "email",
     numeric: false,
     disablePadding: false,
-    label: 'Email',
-    },
-    {
-    id: 'address',
+    label: "Email",
+  },
+  {
+    id: "address",
     numeric: false,
     disablePadding: false,
-    label: 'Address',
-    },
-    {
-    id: 'vat_number',
+    label: "Address",
+  },
+  {
+    id: "vat_number",
     numeric: false,
     disablePadding: false,
-    label: 'VAT Number',
-    },
-    {
-    id: 'vat_office',
+    label: "VAT Number",
+  },
+  {
+    id: "vat_office",
     numeric: false,
     disablePadding: false,
-    label: 'VAT Office',
-    },
-    {
-    id: 'phone',
+    label: "VAT Office",
+  },
+  {
+    id: "phone",
     numeric: false,
     disablePadding: false,
-    label: 'Phone',
-    },
-    {
-    id: 'mobile',
+    label: "Phone",
+  },
+  {
+    id: "mobile",
     numeric: false,
     disablePadding: false,
-    label: 'Mobile',
-    },
-    {
-    id: 'notes',
+    label: "Mobile",
+  },
+  {
+    id: "notes",
     numeric: false,
     disablePadding: false,
-    label: 'Notes',
-    },
-
+    label: "Notes",
+  },
+  {
+    id: "edit",
+    numeric: false,
+    disablePadding: false,
+    label: "Edit",
+  },
 ];
 
+
 function EnhancedTableHead(props) {
-  const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } =
-    props;
+  const {
+    onSelectAllClick,
+    order,
+    orderBy,
+    numSelected,
+    rowCount,
+    onRequestSort,
+  } = props;
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
@@ -161,26 +307,26 @@ function EnhancedTableHead(props) {
             checked={rowCount > 0 && numSelected === rowCount}
             onChange={onSelectAllClick}
             inputProps={{
-              'aria-label': 'select all desserts',
+              "aria-label": "select all desserts",
             }}
           />
         </TableCell>
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
-            align={headCell.numeric ? 'right' : 'left'}
-            padding={headCell.disablePadding ? 'none' : 'normal'}
+            align={headCell.numeric ? "right" : "left"}
+            padding={headCell.disablePadding ? "none" : "normal"}
             sortDirection={orderBy === headCell.id ? order : false}
           >
             <TableSortLabel
               active={orderBy === headCell.id}
-              direction={orderBy === headCell.id ? order : 'asc'}
+              direction={orderBy === headCell.id ? order : "asc"}
               onClick={createSortHandler(headCell.id)}
             >
               {headCell.label}
               {orderBy === headCell.id ? (
                 <Box component="span" sx={visuallyHidden}>
-                  {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
+                  {order === "desc" ? "sorted descending" : "sorted ascending"}
                 </Box>
               ) : null}
             </TableSortLabel>
@@ -195,13 +341,26 @@ EnhancedTableHead.propTypes = {
   numSelected: PropTypes.number.isRequired,
   onRequestSort: PropTypes.func.isRequired,
   onSelectAllClick: PropTypes.func.isRequired,
-  order: PropTypes.oneOf(['asc', 'desc']).isRequired,
+  order: PropTypes.oneOf(["asc", "desc"]).isRequired,
   orderBy: PropTypes.string.isRequired,
   rowCount: PropTypes.number.isRequired,
 };
 
+const [showAddCustomer, setshowAddCustomer] = React.useState(false);
+
 function EnhancedTableToolbar(props) {
-  const { numSelected } = props;
+  const { numSelected, onSearchChange } = props;
+
+
+  const handleClickAddCustomer = () => {
+    console.log("Add customer clicked");
+
+    // Yeni state'i güncelle
+    setshowAddCustomer(true);
+  }
+
+  
+
 
   return (
     <Toolbar
@@ -210,13 +369,16 @@ function EnhancedTableToolbar(props) {
         pr: { xs: 1, sm: 1 },
         ...(numSelected > 0 && {
           bgcolor: (theme) =>
-            alpha(theme.palette.primary.main, theme.palette.action.activatedOpacity),
+            alpha(
+              theme.palette.primary.main,
+              theme.palette.action.activatedOpacity
+            ),
         }),
       }}
     >
       {numSelected > 0 ? (
         <Typography
-          sx={{ flex: '1 1 100%' }}
+          sx={{ flex: "1 1 100%" }}
           color="inherit"
           variant="subtitle1"
           component="div"
@@ -225,7 +387,7 @@ function EnhancedTableToolbar(props) {
         </Typography>
       ) : (
         <Typography
-          sx={{ flex: '1 1 100%' }}
+          sx={{ flex: "1 1 100%" }}
           variant="h6"
           id="tableTitle"
           component="div"
@@ -233,8 +395,19 @@ function EnhancedTableToolbar(props) {
           Customers
         </Typography>
       )}
-
-      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+       
+            <TextField
+                  fullWidth
+                  placeholder="Search"
+                  sx={{ width: "30%", ml: 1, mr: 1, mt: 1, mb: 1,}}
+                  InputProps={{
+                    disableUnderline: true,
+                    sx: { fontSize: 'default' , mt:2,},
+                    startAdornment: <SearchIcon color="inherit" sx={{ display: 'block' }} />,
+                  }}
+                  onChange={(e) => onSearchChange(e.target.value)}
+                  />
+      <Box sx={{ display: "flex", alignItems: "center" }}>
         {numSelected > 0 ? (
           <Tooltip title="Delete">
             <IconButton>
@@ -242,20 +415,23 @@ function EnhancedTableToolbar(props) {
             </IconButton>
           </Tooltip>
         ) : (
-          <Tooltip title="Filter list">
-            <IconButton>
-              <FilterListIcon />
-            </IconButton>
-          </Tooltip>
+          <>
+            <Tooltip title="Filter list">
+              <IconButton>
+                <FilterListIcon />
+              </IconButton>
+            </Tooltip>
+           
+          </>
         )}
 
         <Button
           variant="outlined"
           startIcon={<AddCircleIcon />}
           sx={{ ml: 1 }}
-          component={Link}
-          to="/addcustomer"
+          onClick={handleClickAddCustomer}
         >
+
           <Typography>Add</Typography>
           &nbsp;
           <Typography>Customer</Typography>
@@ -267,19 +443,14 @@ function EnhancedTableToolbar(props) {
 
 EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
+  onSearchChange: PropTypes.func.isRequired,
 };
 
-export default function Customers() {
-  const [order, setOrder] = React.useState('asc');
-  const [orderBy, setOrderBy] = React.useState('calories');
-  const [selected, setSelected] = React.useState([]);
-  const [page, setPage] = React.useState(0);
-  const [dense, setDense] = React.useState(false);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+
 
   const handleRequestSort = (event, property) => {
-    const isAsc = orderBy === property && order === 'asc';
-    setOrder(isAsc ? 'desc' : 'asc');
+    const isAsc = orderBy === property && order === "asc";
+    setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
   };
 
@@ -305,7 +476,7 @@ export default function Customers() {
     } else if (selectedIndex > 0) {
       newSelected = newSelected.concat(
         selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1),
+        selected.slice(selectedIndex + 1)
       );
     }
     setSelected(newSelected);
@@ -320,32 +491,55 @@ export default function Customers() {
     setPage(0);
   };
 
-
+  const handleSearchChange = (value) => {
+    setSearchInput(value);
+    setPage(0); 
+  };
 
   const isSelected = (id) => selected.indexOf(id) !== -1;
 
-  // Avoid a layout jump when reaching the last page with empty rows.
-  const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+  const filteredRows = React.useMemo(
+    () =>
+      rows.filter((row) =>
+        Object.values(row).some(
+          (value) =>
+            typeof value === "string" && value.toLowerCase().includes(searchInput.toLowerCase())
+        )
+      ),
+    [rows, searchInput]
+  );
 
   const visibleRows = React.useMemo(
     () =>
-      stableSort(rows, getComparator(order, orderBy)).slice(
+      stableSort(filteredRows, getComparator(order, orderBy)).slice(
         page * rowsPerPage,
-        page * rowsPerPage + rowsPerPage,
+        page * rowsPerPage + rowsPerPage
       ),
-    [order, orderBy, page, rowsPerPage],
+    [filteredRows, order, orderBy, page, rowsPerPage]
   );
 
+  
+
   return (
-    <Box sx={{ width: '100%' }}>
-      <Paper sx={{ width: '100%', mb: 2 }}>
-        <EnhancedTableToolbar numSelected={selected.length} />
+    
+    <Box sx={{ width: "100%" }}>
+      
+        {showAddCustomer ? (
+          <>
+          <IconButton onClick={() => setshowAddCustomer(false)}>
+            <ArrowBackIcon />
+          </IconButton>
+        <AddCustomer/>
+        </>
+      ) : (
+      <Paper sx={{ width: "100%", mb: 2 }}>
+        <EnhancedTableToolbar
+          numSelected={selected.length}
+          onSearchChange={handleSearchChange}
+
+        />
         <TableContainer>
-          <Table
-            sx={{ minWidth: 750 }}
-            aria-labelledby="tableTitle"
-          >
+          <Table sx={{ minWidth: 750 }} aria-labelledby="tableTitle">
             <EnhancedTableHead
               numSelected={selected.length}
               order={order}
@@ -368,14 +562,14 @@ export default function Customers() {
                     tabIndex={-1}
                     key={row.id}
                     selected={isItemSelected}
-                    sx={{ cursor: 'pointer' }}
+                    sx={{ cursor: "pointer" }}
                   >
                     <TableCell padding="checkbox">
                       <Checkbox
                         color="primary"
                         checked={isItemSelected}
                         inputProps={{
-                          'aria-labelledby': labelId,
+                          "aria-labelledby": labelId,
                         }}
                       />
                     </TableCell>
@@ -395,32 +589,39 @@ export default function Customers() {
                     <TableCell align="left">{row.phone}</TableCell>
                     <TableCell align="left">{row.mobile}</TableCell>
                     <TableCell align="left">{row.notes}</TableCell>
+                    <TableCell align="left">
+                      <Tooltip title="Edit">
+                        <IconButton
+                          onClick={(event) => {
+                            event.stopPropagation();
+                          }}
+                        >
+                          <EditIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </TableCell>
                   </TableRow>
                 );
               })}
-              {emptyRows > 0 && (
-                <TableRow
-                  style={{
-                    height: (dense ? 33 : 53) * emptyRows,
-                  }}
-                >
-                  <TableCell colSpan={6} />
-                </TableRow>
-              )}
             </TableBody>
           </Table>
         </TableContainer>
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={rows.length}
+          count={filteredRows.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
+
+         
+
       </Paper>
-      
+       )}
+     
     </Box>
   );
 }
+
