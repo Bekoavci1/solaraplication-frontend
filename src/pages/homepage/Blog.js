@@ -15,6 +15,8 @@ import Footer from './Footer';
 import DescriptionPost from "./DescriptionPost";
 import solarPanelImage from '../../assets/images/Solar-panels-on-residential-roof-2.png';
 import photo from '../../assets/images/indir.jpeg'
+import {CUSTOMERS} from '../../api/api'
+import { useEffect } from 'react';
 
 
 const sections = [

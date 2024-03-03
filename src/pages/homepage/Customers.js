@@ -29,6 +29,8 @@ import SearchIcon from '@mui/icons-material/Search';
 import PaperBase from "../dashboard/Paperbase";
 import AddCustomer from "./AddCustomer";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { useEffect } from "react";
+import { CUSTOMERS } from "../../api/api";
 
 
 function createData(
@@ -57,7 +59,7 @@ function createData(
   };
 }
 
-const rows = [
+const rows2 = [
   createData(
     1,
     "John Doe",
@@ -438,6 +440,7 @@ export default function Customers() {
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [searchInput, setSearchInput] = React.useState("");
   const [showAddCustomer, setShowAddCustomer] = React.useState(false); // Add state for showAddCustomer
+  const [rows, setRows] = React.useState([]); // Change rows to state
  
 
 
@@ -510,6 +513,16 @@ export default function Customers() {
       ),
     [filteredRows, order, orderBy, page, rowsPerPage]
   );
+
+  useEffect (() => {
+    const fetchData = async () => {
+      const [gelen, error] =  await CUSTOMERS.getAll();
+      console.log("Fetch Data: ",gelen);
+      setRows(gelen);
+    }
+    fetchData();
+  }
+  , []);
 
   return (
     <Box sx={{ width: "100%" }}>
