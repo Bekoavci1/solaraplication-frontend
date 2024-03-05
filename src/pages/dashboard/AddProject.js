@@ -18,6 +18,9 @@ import {
   ListItem,
   ListItemIcon,
   AppBar,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
 } from "@mui/material";
 import HomeIcon from "@mui/icons-material/Home";
 import InfoIcon from "@mui/icons-material/Info";
@@ -27,6 +30,8 @@ import Tab from "@mui/material/Tab";
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import Map from "./Map";
 
 export default function AddProject() {
   // Drawer için state
@@ -41,6 +46,9 @@ export default function AddProject() {
 
   // Drawer'ı kontrol etmek için fonksiyon
   const handleAccordionChange = (panel) => (event, newExpanded) => {
+    setExpanded(newExpanded ? panel : true);
+  };
+  const handleAccordionChange2 = (panel) => (event, newExpanded) => {
     setExpanded(newExpanded ? panel : false);
   };
 
@@ -50,7 +58,7 @@ export default function AddProject() {
   return (
     <Box sx={{ width: "100%" }}>
       <Grid container spacing={2}>
-        <Grid item xs={12} sm={4} >
+        <Grid item xs={12} sm={4}>
           <TabContext value={value}>
             <Box
               sx={{
@@ -96,64 +104,68 @@ export default function AddProject() {
               </TabList>
             </Box>
             <TabPanel value="1">
-              <Box>
-                {/* Kartlar */}
-                <Card>
-                  <CardContent>
-                    <Typography variant="h6">PROJECT DETAILS</Typography>
-                    {/* Form elemanları */}
-                    <TextField fullWidth label="Project Name" margin="normal" />
-                    <TextField fullWidth label="Address" margin="normal" />
-                    {/* Diğer alanlar */}
-                  </CardContent>
-                </Card>
-                <Card>
-                  <CardContent>
-                    <Typography variant="h6">NET PARAMETERS</Typography>
-                    {/* Form elemanları */}
-                    <FormControl fullWidth margin="normal">
-                      <InputLabel>Electricity Net</InputLabel>
-                      <Select label="Electricity Net">
-                        <MenuItem value="230V">230V L-N</MenuItem>
-                        {/* Diğer seçenekler */}
-                      </Select>
-                    </FormControl>
-                    <TextField fullWidth label="Power Factor" margin="normal" />
-                    <FormControlLabel
-                      control={<Checkbox />}
-                      label="Export Limit"
-                    />
-                    {/* Diğer alanlar */}
-                  </CardContent>
-                </Card>
-                {/* Diğer Kartlar */}
+              <Accordion
+                expanded={expanded === "projectDetails"}
+                onChange={handleAccordionChange("projectDetails")}
+              >
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                  <Typography variant="h6">PROJECT DETAILS</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <TextField fullWidth label="Project Name" margin="normal" />
+                  <TextField fullWidth label="Address" margin="normal" />
+                </AccordionDetails>
+              </Accordion>
 
-                <Box
-                  sx={{
-                    position: "absolute",
-                    bottom: 16,
-                    left: 250,
-                    right: 16,
-                  }}
-                >
-                  <Button variant="contained" color="primary">
-                    Confirm
-                  </Button>
-                  <Button variant="contained" color="secondary" sx={{ ml: 2 }}>
-                    Cancel
-                  </Button>
-                </Box>
-              </Box>
+              <Accordion
+                expanded={expanded === "NETPARAMETERS"}
+                onChange={handleAccordionChange2("NETPARAMETERS")}
+              >
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                  <Typography variant="h6">NET PARAMETERS</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <FormControl fullWidth margin="normal">
+                    <InputLabel>Electricity Net</InputLabel>
+                    <Select label="Electricity Net">
+                      <MenuItem value="230V">230V L-N</MenuItem>
+                      {/* Diğer seçenekler */}
+                    </Select>
+                  </FormControl>
+                  <TextField fullWidth label="Power Factor" margin="normal" />
+                  <FormControlLabel
+                    control={<Checkbox />}
+                    label="Export Limit"
+                  />
+                </AccordionDetails>
+              </Accordion>
+
+              {/* Net Parameters and other cards can also be converted to accordion panels if needed */}
             </TabPanel>
+
             <TabPanel value="2">Item Two</TabPanel>
             <TabPanel value="3">Item Three</TabPanel>
           </TabContext>
         </Grid>
+        <Box
+          sx={{
+            position: "absolute",
+            bottom: 16,
+            left: 250,
+            right: 16,
+          }}
+        >
+          <Button variant="contained" color="primary">
+            Confirm
+          </Button>
+          <Button variant="contained" color="secondary" sx={{ ml: 2 }}>
+            Cancel
+          </Button>
+        </Box>
 
-        <Grid item xs={12} sm={8} sx={{ backgroundColor: "gray" }}>
-          {/* Harita */}
+        <Grid item xs={12} sm={8} sx={{ flex: '1 0 auto', height: 'calc(100vh - 64px)' }} >
           <div style={{ width: "100%", height: "100%" }}>
-            {/* Harita entegrasyonu buraya */}
+            <Map/>
           </div>
         </Grid>
       </Grid>
