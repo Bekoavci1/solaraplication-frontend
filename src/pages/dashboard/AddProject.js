@@ -62,47 +62,64 @@ export default function AddProject() {
           <TabContext value={value}>
             <Box
               sx={{
-                display: "flex",
-                borderBottom: 1,
-                justifyContent: "center",
-                borderColor: "divider",
+                overflow: "hidden", // Oval köşeler için gereklidir, böylece içerik de yuvarlak köşelere uyar
+                borderRadius: "50px", // Tamamen oval köşeler için
                 backgroundColor: "#009BE5",
-                width: "99%",
-                borderRadius: "20px",
+                boxShadow: 3, // Kutuya gölge eklemek için (isteğe bağlı)
+                mx: "auto", // Kutuyu merkezleme
+                width: "auto", // Kutunun genişliğini içerik boyutuna göre ayarla
+                maxWidth: "calc(100% - 32px)", // Kutunun maksimum genişliği, ekranın kenarlarından boşluk bırak
               }}
             >
               <TabList
                 onChange={handleChange}
-                textColor="inherit"
+                variant="fullWidth"
                 aria-label="lab API tabs example"
-                sx={{}}
+                sx={{
+                  ".MuiTabs-indicator": {
+                    height: "2px", // Gösterge çubuğunun yüksekliğini ince yap
+                    borderRadius: "5px", // Gösterge çubuğunun köşelerini hafif yuvarlak yap
+                    backgroundColor: "#fff",
+                  },
+                  ".MuiTab-root": {
+                    textTransform: "none",
+                    fontWeight: "normal", // Yazı tipi ağırlığını özelleştir
+                    fontSize: "0.875rem", // Yazı tipi boyutunu küçült
+                    margin: "0 4px", // Tablar arası boşluğu azalt
+                    padding: "6px 12px", // Padding'i azaltarak tabların daha ince olmasını sağla
+                    "&:hover": {
+                      opacity: 0.9,
+                      backgroundColor: "rgba(255, 255, 255, 0.2)",
+                    },
+                    "&.Mui-selected": {
+                      backgroundColor: "rgba(255, 255, 255, 0.3)",
+                    },
+                  },
+                }}
               >
                 <Tab
                   label="Project"
-                  sx={{ fontSize: "20px", color: "white" }}
                   value="1"
-                  icon={<HomeIcon />}
+                  icon={<HomeIcon sx={{ marginBottom: "-6px" }} />}
                 />
                 <Tab
                   label="Details"
-                  sx={{ fontSize: "20px", color: "white" }}
                   value="2"
-                  icon={<InfoIcon />}
+                  icon={<InfoIcon sx={{ marginBottom: "-6px" }} />}
                 />
                 <Tab
                   label="Location"
-                  sx={{ fontSize: "20px", color: "white" }}
                   value="3"
-                  icon={<PlaceIcon />}
+                  icon={<PlaceIcon sx={{ marginBottom: "-6px" }} />}
                 />
                 <Tab
                   label="Notes"
-                  sx={{ fontSize: "20px", color: "white" }}
                   value="4"
-                  icon={<NoteIcon />}
+                  icon={<NoteIcon sx={{ marginBottom: "-6px" }} />}
                 />
               </TabList>
             </Box>
+
             <TabPanel value="1">
               <Accordion
                 expanded={expanded === "projectDetails"}
@@ -163,9 +180,14 @@ export default function AddProject() {
           </Button>
         </Box>
 
-        <Grid item xs={12} sm={8} sx={{ flex: '1 0 auto', height: 'calc(100vh - 64px)' }} >
+        <Grid
+          item
+          xs={12}
+          sm={8}
+          sx={{ flex: "1 0 auto", height: "calc(100vh - 64px)" }}
+        >
           <div style={{ width: "100%", height: "100%" }}>
-            <Map/>
+            <Map />
           </div>
         </Grid>
       </Grid>
