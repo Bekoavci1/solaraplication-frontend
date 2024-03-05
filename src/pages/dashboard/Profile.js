@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { Avatar, Button, TextField, Grid, Paper, Typography, IconButton } from '@mui/material';
 import CancelIcon from '@mui/icons-material/Cancel';
 import SaveIcon from '@mui/icons-material/Save';
@@ -20,6 +20,13 @@ function Profile({ onCancel }) {
       [name]: value
     }));
   };
+  const [userProfile,setUSerProfile] = useState({})
+  useEffect(() =>{
+    const userprofile = localStorage.getItem('userProfile')
+      const userProfile = JSON.parse(userprofile)
+      console.log("profile: ",userProfile)
+    setUSerProfile(userProfile)
+  },[])
 
   const handleSave = () => {
     console.log('Profile saved:', user);
@@ -49,13 +56,13 @@ function Profile({ onCancel }) {
           <Avatar src={user.avatar} sx={{ width: 56, height: 56 }} />
         </Grid>
         <Grid item xs={12}>
-          <TextField label="First Name" fullWidth name="firstName" value={user.firstName} onChange={handleInputChange} />
+          <TextField label="First Name" fullWidth name="firstName" value={userProfile.name} onChange={handleInputChange} />
         </Grid>
         <Grid item xs={12}>
           <TextField label="Last Name" fullWidth name="lastName" value={user.lastName} onChange={handleInputChange} />
         </Grid>
         <Grid item xs={12}>
-          <TextField label="Email" fullWidth name="email" value={user.email} InputProps={{ readOnly: true, }} />
+          <TextField label="Email" fullWidth name="email" value={userProfile.email} InputProps={{ readOnly: true, }} />
         </Grid>
         <Grid item xs={12}>
           <TextField label="Old Password" fullWidth name="password" type="password" value={user.password} onChange={handleInputChange} placeholder="Enter old password" />

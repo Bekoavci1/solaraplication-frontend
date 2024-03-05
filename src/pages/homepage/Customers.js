@@ -516,7 +516,13 @@ export default function Customers() {
 
   useEffect (() => {
     const fetchData = async () => {
-      const [gelen, error] =  await CUSTOMERS.getAll();
+
+      const userprofile = localStorage.getItem("userProfile");
+      const userProfile = JSON.parse(userprofile);
+      console.log('userprofilebilgi', userProfile)
+      const [gelen, error] =  await CUSTOMERS.getAll({
+        company_id: userProfile.company_id
+      });
       console.log("Fetch Data: ",gelen);
       setRows(gelen);
     }

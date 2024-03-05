@@ -19,15 +19,36 @@ const handleRequest = async (requestFunction) => {
 }
 
 export const CUSTOMERS= {
-    getAll: async () => {
-        return handleRequest(() => api.get('/customers'));
-    },
+    getAll: async (queryParams) => {
+        // console.log("wqeü",queryParams)
+        return handleRequest(() => api.get('/customers', { params: queryParams }));
+    },    
     byId: async (id) => {
         return handleRequest(() => api.get(`/customers/${id}`));
     },
     postCustomer: async (customer) => {
         return handleRequest(() => api.post('/customers', customer));
     },
+    putCustomer: async (customer) => {
+        return handleRequest(() => api.put(`/customers/${customer.id}`, customer));
+    },
+}
+
+export const USER= {
+    login: async (email,password) => {
+        const userInformation = {
+            email:email,
+            password:password
+        }
+        return handleRequest(() => api.post('/users/login',userInformation));
+    },
+    
+    byId: async (id) => {
+        return handleRequest(() => api.get(`/customers/${id}`));
+    },
+    // postCustomer: async (customer) => {
+    //     return handleRequest(() => api.post('/customers', customer));
+    // },
     putCustomer: async (customer) => {
         return handleRequest(() => api.put(`/customers/${customer.id}`, customer));
     },

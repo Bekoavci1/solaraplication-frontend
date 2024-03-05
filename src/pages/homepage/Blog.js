@@ -17,6 +17,7 @@ import solarPanelImage from '../../assets/images/Solar-panels-on-residential-roo
 import photo from '../../assets/images/indir.jpeg'
 import {CUSTOMERS} from '../../api/api'
 import { useEffect } from 'react';
+import { useNavigate } from "react-router-dom";
 
 
 const sections = [
@@ -94,7 +95,19 @@ const sidebar = {
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 
+
+
 export default function Blog() {
+  const navigate = useNavigate();
+
+    useEffect(()=>{
+      const accestoken = localStorage.getItem("accessToken");
+      if (accestoken) {
+        console.log("Token alındı:", accestoken); // Konsolda token'ı log'la
+        navigate("/paperbase"); // Giriş başarılıysa, kullanıcıyı paperbase sayfasına yönlendir
+      }
+    },[])
+
   return (
     <ThemeProvider theme={defaultTheme}>
       <CssBaseline />

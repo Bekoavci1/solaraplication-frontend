@@ -17,6 +17,8 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Divider from "@mui/material/Divider";
 import { useLocation } from "react-router-dom";
+import { auth } from '../../api/auth';
+import { useNavigate } from 'react-router-dom';
 
 const lightColor = "rgba(255, 255, 255, 0.7)";
 
@@ -33,7 +35,7 @@ function Header(props) {
   };
   const handleChangeAltTab = (event, newValue) => {
     setSelectedTab(newValue);
-    console.log("sdaa", newValue)
+    
     if (onTabChange) {
       onTabChange(newValue);
     }
@@ -41,8 +43,10 @@ function Header(props) {
   const onProfileClick = () => {
     window.location.href = "/profile";
   };
+  const navigate = useNavigate();
   const onLogoutClick = () => {
-    window.location.href = "/";
+    auth.logout();
+    navigate('/login');
   };
 
   const [anchorEl, setAnchorEl] = useState(null);
