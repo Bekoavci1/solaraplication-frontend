@@ -25,13 +25,12 @@ import { visuallyHidden } from "@mui/utils";
 import { Button, TextField } from "@mui/material";
 import { Link } from "react-router-dom";
 import EditIcon from "@mui/icons-material/Edit";
-import SearchIcon from '@mui/icons-material/Search';
+import SearchIcon from "@mui/icons-material/Search";
 import PaperBase from "../dashboard/Paperbase";
 import AddCustomer from "./AddCustomer";
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useEffect } from "react";
-import { CUSTOMERS } from "../../api/api";
-
+import { CUSTOMERS, ADDRESS } from "../../api/api";
 
 function createData(
   id,
@@ -273,7 +272,6 @@ const headCells = [
   },
 ];
 
-
 function EnhancedTableHead(props) {
   const {
     onSelectAllClick,
@@ -337,14 +335,13 @@ EnhancedTableHead.propTypes = {
 };
 
 function EnhancedTableToolbar(props) {
-  const { numSelected, onSearchChange,setShowAddCustomer } = props;
-
+  const { numSelected, onSearchChange, setShowAddCustomer } = props;
 
   const handleClickAddCustomer = () => {
     console.log("Add customer clicked");
     // Yeni state'i güncelle
     setShowAddCustomer(true);
-  }
+  };
 
   return (
     <Toolbar
@@ -379,18 +376,20 @@ function EnhancedTableToolbar(props) {
           Customers
         </Typography>
       )}
-       
-            <TextField
-                  fullWidth
-                  placeholder="Search"
-                  sx={{ width: "30%", ml: 1, mr: 1, mt: 1, mb: 1,}}
-                  InputProps={{
-                    disableUnderline: true,
-                    sx: { fontSize: 'default' , mt:2,},
-                    startAdornment: <SearchIcon color="inherit" sx={{ display: 'block' }} />,
-                  }}
-                  onChange={(e) => onSearchChange(e.target.value)}
-                  />
+
+      <TextField
+        fullWidth
+        placeholder="Search"
+        sx={{ width: "30%", ml: 1, mr: 1, mt: 1, mb: 1 }}
+        InputProps={{
+          disableUnderline: true,
+          sx: { fontSize: "default", mt: 2 },
+          startAdornment: (
+            <SearchIcon color="inherit" sx={{ display: "block" }} />
+          ),
+        }}
+        onChange={(e) => onSearchChange(e.target.value)}
+      />
       <Box sx={{ display: "flex", alignItems: "center" }}>
         {numSelected > 0 ? (
           <Tooltip title="Delete">
@@ -405,7 +404,6 @@ function EnhancedTableToolbar(props) {
                 <FilterListIcon />
               </IconButton>
             </Tooltip>
-           
           </>
         )}
 
@@ -430,7 +428,6 @@ EnhancedTableToolbar.propTypes = {
   setShowAddCustomer: PropTypes.func.isRequired, // Add prop type for setShowAddCustomer
 };
 
-
 export default function Customers() {
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
@@ -441,8 +438,6 @@ export default function Customers() {
   const [searchInput, setSearchInput] = React.useState("");
   const [showAddCustomer, setShowAddCustomer] = React.useState(false); // Add state for showAddCustomer
   const [rows, setRows] = React.useState([]); // Change rows to state
- 
-
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -452,7 +447,8 @@ export default function Customers() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelected = rows.map((n) => n.id);
+      const newSelected = rows.map((n) => n._id);
+      console.log("New Selected: ", newSelected);
       setSelected(newSelected);
       return;
     }
@@ -489,7 +485,7 @@ export default function Customers() {
 
   const handleSearchChange = (value) => {
     setSearchInput(value);
-    setPage(0); 
+    setPage(0);
   };
 
   const isSelected = (id) => selected.indexOf(id) !== -1;
@@ -499,7 +495,8 @@ export default function Customers() {
       rows.filter((row) =>
         Object.values(row).some(
           (value) =>
-            typeof value === "string" && value.toLowerCase().includes(searchInput.toLowerCase())
+            typeof value === "string" &&
+            value.toLowerCase().includes(searchInput.toLowerCase())
         )
       ),
     [rows, searchInput]
@@ -514,118 +511,139 @@ export default function Customers() {
     [filteredRows, order, orderBy, page, rowsPerPage]
   );
 
-  useEffect (() => {
+  useEffect(() => {
     const fetchData = async () => {
-
       const userprofile = localStorage.getItem("userProfile");
       const userProfile = JSON.parse(userprofile);
       console.log('userprofilebilgi', userProfile)
-      const [gelen, error] =  await CUSTOMERS.getAll({
+    
+      const [customers, error] = await CUSTOMERS.getAll({
         company_id: userProfile.company_id
       });
-      console.log("Fetch Data: ",gelen);
-      setRows(gelen);
-    }
+    
+      if (customers !== null) {
+        // Fetch addresses for all customers concurrently
+        const addressPromises = customers.map((item) => ADDRESS.byId(item.address_id));
+    
+        try {
+          const addresses = await Promise.all(addressPromises);
+    
+          // Update the rows with the fetched addresses
+          const updatedCustomers = customers.map((item, index) => {
+            return {
+              ...item,
+              address: addresses[index][0]
+            };
+          });
+    
+          setRows(updatedCustomers);
+        } catch (error) {
+          console.error('Error fetching addresses:', error);
+        }
+      }
+    };
     fetchData();
-  }
-  , []);
+  }, []);
 
   return (
     <Box sx={{ width: "100%" }}>
-        
-        {showAddCustomer ? (
-          <>
+      {showAddCustomer ? (
+        <>
           <IconButton onClick={() => setShowAddCustomer(false)}>
             <ArrowBackIcon />
           </IconButton>
-        <AddCustomer/>
+          <AddCustomer />
         </>
       ) : (
-      <Paper sx={{ width: "100%", mb: 2 }}>
-        <EnhancedTableToolbar
-          numSelected={selected.length}
-          onSearchChange={handleSearchChange}
-          setShowAddCustomer={setShowAddCustomer}
-
-        />
-        <TableContainer>
-          <Table sx={{ minWidth: 750 }} aria-labelledby="tableTitle">
-            <EnhancedTableHead
-              numSelected={selected.length}
-              order={order}
-              orderBy={orderBy}
-              onSelectAllClick={handleSelectAllClick}
-              onRequestSort={handleRequestSort}
-              rowCount={rows.length}
-            />
-            <TableBody>
-              {visibleRows.map((row, index) => {
-                const isItemSelected = isSelected(row.id);
-                const labelId = `enhanced-table-checkbox-${index}`;
-
-                return (
-                  <TableRow
-                    hover
-                    onClick={(event) => handleClick(event, row.id)}
-                    role="checkbox"
-                    aria-checked={isItemSelected}
-                    tabIndex={-1}
-                    key={row.id}
-                    selected={isItemSelected}
-                    sx={{ cursor: "pointer" }}
-                  >
-                    <TableCell padding="checkbox">
-                      <Checkbox
-                        color="primary"
-                        checked={isItemSelected}
-                        inputProps={{
-                          "aria-labelledby": labelId,
-                        }}
-                      />
-                    </TableCell>
-                    <TableCell
-                      component="th"
-                      id={labelId}
-                      scope="row"
-                      padding="none"
+        <Paper sx={{ width: "100%", mb: 2 }}>
+          <EnhancedTableToolbar
+            numSelected={selected.length}
+            onSearchChange={handleSearchChange}
+            setShowAddCustomer={setShowAddCustomer}
+          />
+          <TableContainer>
+            <Table sx={{ minWidth: 750 }} aria-labelledby="tableTitle">
+              <EnhancedTableHead
+                key={rows._id}
+                numSelected={selected.length}
+                order={order}
+                orderBy={orderBy}
+                onSelectAllClick={handleSelectAllClick}
+                onRequestSort={handleRequestSort}
+                rowCount={rows.length}
+              />
+              <TableBody>
+                {visibleRows.map((row, index) => {
+                  const isItemSelected = isSelected(row._id);
+                  const labelId = `enhanced-table-checkbox-${index}`;
+                  console.log("Row: ", row);
+                  return (
+                    <TableRow
+                      key={row._id}
+                      hover
+                      onClick={(event) => handleClick(event, row._id)}
+                      role="checkbox"
+                      aria-checked={isItemSelected}
+                      tabIndex={-1}
+                      selected={isItemSelected}
+                      sx={{ cursor: "pointer" }}
                     >
-                      {row.name}
-                    </TableCell>
-                    <TableCell align="left">{row.company_name}</TableCell>
-                    <TableCell align="left">{row.email}</TableCell>
-                    <TableCell align="left">{row.address}</TableCell>
-                    <TableCell align="left">{row.vat_number}</TableCell>
-                    <TableCell align="left">{row.vat_office}</TableCell>
-                    <TableCell align="left">{row.phone}</TableCell>
-                    <TableCell align="left">{row.mobile}</TableCell>
-                    <TableCell align="left">{row.notes}</TableCell>
-                    <TableCell align="left">
-                      <Tooltip title="Edit">
-                        <IconButton
-                          onClick={(event) => {
-                            event.stopPropagation();
+                      <TableCell padding="checkbox">
+                        <Checkbox
+                          color="primary"
+                          checked={isItemSelected}
+                          inputProps={{
+                            "aria-labelledby": labelId,
                           }}
-                        >
-                          <EditIcon />
-                        </IconButton>
-                      </Tooltip>
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          component="div"
-          count={filteredRows.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
-      </Paper>
+                        />
+                      </TableCell>
+                      <TableCell
+                        component="th"
+                        id={labelId}
+                        scope="row"
+                        padding="none"
+                      >
+                        {row.name}
+                      </TableCell>
+                      <TableCell align="left">{row.company_name}</TableCell>
+                      <TableCell align="left">{row.email}</TableCell>
+                      <TableCell align="left">
+                        {row.address
+                          ? `${row.address.street}, ${row.address.house_number}, ${row.address.postcode}, ${row.address.city}, ${row.address.country}`
+                          : ""}
+                      </TableCell>{" "}
+                      <TableCell align="left">{row.vat_number}</TableCell>
+                      <TableCell align="left">{row.vat_office}</TableCell>
+                      <TableCell align="left">{row.phone}</TableCell>
+                      <TableCell align="left">{row.mobile}</TableCell>
+                      <TableCell align="left">{row.notes}</TableCell>
+                      <TableCell align="left">
+                        <Tooltip title="Edit">
+                          <IconButton
+                            onClick={(event) => {
+                              event.stopPropagation();
+                            }}
+                          >
+                            <EditIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <TablePagination
+            rowsPerPageOptions={[5, 10, 25]}
+            component="div"
+            count={filteredRows.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
+        </Paper>
       )}
     </Box>
   );
