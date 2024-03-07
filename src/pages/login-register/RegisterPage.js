@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState } from "react";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
@@ -20,24 +20,86 @@ import Stack from "@mui/material/Stack";
 import CssBaseline from "@mui/material/CssBaseline";
 import Box from "@mui/material/Box";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { Snackbar, Alert } from "@mui/material";
+
+import { CUSTOMERS, ADDRESS, COMPANY } from "../../api/api";
+import { USER } from "../../api/api";
 
 const defaultTheme = createTheme();
 
 export default function SignInSide() {
   const [selectedDate, setSelectedDate] = React.useState(null);
+  const navigate = useNavigate();
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+
+  const handleOpenSnackbar = () => {
+    setOpenSnackbar(true);
+  };
+
+  const handleCloseSnackbar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenSnackbar(false);
+  };
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-      // Add more fields as needed
-    });
+  const [userDetails, setUserDetails] = React.useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    gender: "",
+    birthDate: "",
+    company_id: "",
+  });
+
+  const [companyDetails, setCompanyDetails] = React.useState({
+    name: "",
+    vat_number: "",
+    vat_office: "",
+    address: {
+      street: "",
+      house_number: "",
+      country: "",
+      city: "",
+      postcode: "",
+      addition: "",
+    },
+  });
+  const yolla = async () => {
+    if (activeStep === steps.length - 1) {
+      if (userDetails.password !== userDetails.confirmPassword) {
+        alert("Passwords do not match.");
+        return;
+      }
+      if (activeStep === 2) {
+        console.log("sihnup");
+        navigate("/login");
+        handleOpenSnackbar();
+      }
+      console.log("uer ", userDetails, " hebele2: ", companyDetails);
+      userDetails.name = userDetails.firstName + " " + userDetails.lastName;
+
+      delete userDetails.firstName;
+      delete userDetails.lastName;
+      const [response, error] = await USER.register(
+        userDetails,
+        companyDetails
+      );
+      if (error) {
+        console.error("Kayıt sırasında hata oluştu:", error);
+      } else {
+        console.log("Kullanıcı başarıyla kaydedildi:", response);
+      }
+    } else {
+      handleNext();
+    }
   };
 
   const steps = [
@@ -65,6 +127,13 @@ export default function SignInSide() {
 
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
     setSkipped(newSkipped);
+    console.log("active", activeStep);
+    if (activeStep === 2) {
+      yolla();
+    }
+  };
+  const handleSubmit = async (event) => {
+    event.preventDefault();
   };
 
   const handleBack = () => {
@@ -141,12 +210,7 @@ export default function SignInSide() {
               })}
             </Stepper>
             {activeStep === 0 && (
-              <Box
-                component="form"
-                noValidate
-                onSubmit={handleSubmit}
-                sx={{ mt: 3 }}
-              >
+              <Box component="form" noValidate sx={{ mt: 3 }}>
                 <Grid container spacing={2}>
                   <Grid item xs={12} sm={6}>
                     <TextField
@@ -157,6 +221,13 @@ export default function SignInSide() {
                       id="firstName"
                       label="First Name"
                       autoFocus
+                      value={userDetails.firstName}
+                      onChange={(event) =>
+                        setUserDetails({
+                          ...userDetails,
+                          firstName: event.target.value,
+                        })
+                      }
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
@@ -167,6 +238,13 @@ export default function SignInSide() {
                       label="Last Name"
                       name="lastName"
                       autoComplete="family-name"
+                      value={userDetails.lastName}
+                      onChange={(event) =>
+                        setUserDetails({
+                          ...userDetails,
+                          lastName: event.target.value,
+                        })
+                      }
                     />
                   </Grid>
                   <Grid item xs={12}>
@@ -177,6 +255,13 @@ export default function SignInSide() {
                       label="Email Address"
                       name="email"
                       autoComplete="email"
+                      value={userDetails.email}
+                      onChange={(event) =>
+                        setUserDetails({
+                          ...userDetails,
+                          email: event.target.value,
+                        })
+                      }
                     />
                   </Grid>
                   <Grid item xs={12}>
@@ -188,6 +273,13 @@ export default function SignInSide() {
                       type="password"
                       id="password"
                       autoComplete="new-password"
+                      value={userDetails.password}
+                      onChange={(event) =>
+                        setUserDetails({
+                          ...userDetails,
+                          password: event.target.value,
+                        })
+                      }
                     />
                   </Grid>
                   <Grid item xs={12}>
@@ -199,23 +291,33 @@ export default function SignInSide() {
                       type="password"
                       id="confirmPassword"
                       autoComplete="new-password"
+                      value={userDetails.confirmPassword}
+                      onChange={(event) =>
+                        setUserDetails({
+                          ...userDetails,
+                          confirmPassword: event.target.value,
+                        })
+                      }
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <FormControl fullWidth>
-                      <InputLabel id="demo-simple-select-label">
-                        Gender
-                      </InputLabel>
+                      <InputLabel id="gender-select-label">Gender</InputLabel>
                       <Select
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
-                        value={gender}
+                        labelId="gender-select-label"
+                        id="gender-select"
+                        value={userDetails.gender}
                         label="Gender"
-                        onChange={handleChange}
+                        onChange={(event) =>
+                          setUserDetails({
+                            ...userDetails,
+                            gender: event.target.value,
+                          })
+                        }
                       >
-                        <MenuItem value={"m"}>Male</MenuItem>
-                        <MenuItem value={"f"}>Female</MenuItem>
-                        <MenuItem value={"u"}>Other</MenuItem>
+                        <MenuItem value={"male"}>Male</MenuItem>
+                        <MenuItem value={"female"}>Female</MenuItem>
+                        <MenuItem value={"other"}>Other</MenuItem>
                       </Select>
                     </FormControl>
                   </Grid>
@@ -223,10 +325,16 @@ export default function SignInSide() {
                     <TextField
                       required
                       fullWidth
-                      id="date"
+                      id="dateOfBirth"
                       label="Date of Birth"
                       type="date"
-                      defaultValue="2017-05-24"
+                      value={userDetails.birthDate || "2017-05-24"}
+                      onChange={(event) =>
+                        setUserDetails({
+                          ...userDetails,
+                          birthDate: event.target.value,
+                        })
+                      }
                       InputLabelProps={{
                         shrink: true,
                       }}
@@ -249,22 +357,22 @@ export default function SignInSide() {
               </Box>
             )}
             {activeStep === 1 && (
-              <Box
-                component="form"
-                noValidate
-                onSubmit={handleSubmit}
-                sx={{ mt: 3 }}
-              >
+              <Box component="form" noValidate sx={{ mt: 3 }}>
                 <Grid container spacing={2}>
                   <Grid item xs={12} sm={6}>
                     <TextField
-                      autoComplete="given-name"
-                      name="companyName"
                       required
                       fullWidth
                       id="companyName"
                       label="Company Name"
-                      autoFocus
+                      name="companyName"
+                      value={companyDetails.name}
+                      onChange={(event) =>
+                        setCompanyDetails({
+                          ...companyDetails,
+                          name: event.target.value,
+                        })
+                      }
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
@@ -274,7 +382,13 @@ export default function SignInSide() {
                       id="vatNumber"
                       label="Vat Number"
                       name="vatNumber"
-                      autoComplete="family-name"
+                      value={companyDetails.vat_number}
+                      onChange={(event) =>
+                        setCompanyDetails({
+                          ...companyDetails,
+                          vat_number: event.target.value,
+                        })
+                      }
                     />
                   </Grid>
                   <Grid item xs={12}>
@@ -282,9 +396,15 @@ export default function SignInSide() {
                       required
                       fullWidth
                       id="vatOffice"
-                      label="Vat Office"
+                      label="VAT Office"
                       name="vatOffice"
-                      autoComplete="email"
+                      value={companyDetails.vat_office}
+                      onChange={(event) =>
+                        setCompanyDetails({
+                          ...companyDetails,
+                          vat_office: event.target.value,
+                        })
+                      }
                     />
                   </Grid>
                   <Grid item xs={12}>
@@ -304,22 +424,25 @@ export default function SignInSide() {
               </Box>
             )}
             {activeStep === 2 && (
-              <Box
-                component="form"
-                noValidate
-                onSubmit={handleSubmit}
-                sx={{ mt: 3 }}
-              >
+              <Box component="form" noValidate sx={{ mt: 3 }}>
                 <Grid container spacing={2}>
                   <Grid item xs={12} sm={6}>
                     <TextField
-                      autoComplete="given-name"
-                      name="street"
                       required
                       fullWidth
                       id="street"
                       label="Street"
-                      autoFocus
+                      name="street"
+                      value={companyDetails.address.street}
+                      onChange={(event) =>
+                        setCompanyDetails({
+                          ...companyDetails,
+                          address: {
+                            ...companyDetails.address,
+                            street: event.target.value,
+                          },
+                        })
+                      }
                     />
                   </Grid>
 
@@ -330,7 +453,16 @@ export default function SignInSide() {
                       id="houseNumber"
                       label="House Number"
                       name="houseNumber"
-                      autoComplete="family-name"
+                      value={companyDetails.address.house_number}
+                      onChange={(event) =>
+                        setCompanyDetails({
+                          ...companyDetails,
+                          address: {
+                            ...companyDetails.address,
+                            house_number: event.target.value,
+                          },
+                        })
+                      }
                     />
                   </Grid>
                   <Grid item xs={12}>
@@ -340,7 +472,16 @@ export default function SignInSide() {
                       id="country"
                       label="Country"
                       name="country"
-                      autoComplete="email"
+                      value={companyDetails.address.country}
+                      onChange={(event) =>
+                        setCompanyDetails({
+                          ...companyDetails,
+                          address: {
+                            ...companyDetails.address,
+                            country: event.target.value,
+                          },
+                        })
+                      }
                     />
                   </Grid>
                   <Grid item xs={12}>
@@ -350,7 +491,16 @@ export default function SignInSide() {
                       id="city"
                       label="City"
                       name="city"
-                      autoComplete="email"
+                      value={companyDetails.address.city}
+                      onChange={(event) =>
+                        setCompanyDetails({
+                          ...companyDetails,
+                          address: {
+                            ...companyDetails.address,
+                            city: event.target.value,
+                          },
+                        })
+                      }
                     />
                   </Grid>
                   <Grid item xs={12}>
@@ -360,7 +510,16 @@ export default function SignInSide() {
                       id="postCode"
                       label="Post Code"
                       name="postCode"
-                      autoComplete="email"
+                      value={companyDetails.address.postcode}
+                      onChange={(event) =>
+                        setCompanyDetails({
+                          ...companyDetails,
+                          address: {
+                            ...companyDetails.address,
+                            postcode: event.target.value,
+                          },
+                        })
+                      }
                     />
                   </Grid>
                   <Grid item xs={12}>
@@ -370,21 +529,42 @@ export default function SignInSide() {
                       id="additionalInfo"
                       label="Additional Info"
                       name="additionalInfo"
-                      autoComplete="email"
+                      value={companyDetails.address.addition}
+                      onChange={(event) =>
+                        setCompanyDetails({
+                          ...companyDetails,
+                          address: {
+                            ...companyDetails.address,
+                            addition: event.target.value,
+                          },
+                        })
+                      }
                     />
                   </Grid>
                 </Grid>
               </Box>
             )}
             <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
-              <Button
-                color="inherit"
-                disabled={activeStep === 0}
-                onClick={handleBack}
-                sx={{ mr: 1 }}
-              >
-                Back
-              </Button>
+              {activeStep === 0 ? (
+                <Button
+                  onClick={() => navigate("/login")}
+                  sx={{
+                    mt: 1,
+                    backgroundColor: "white", // Açık mavi arka plan rengi
+                    color: "primary", // Yazı rengi beyaz
+                    "&:hover": {
+                      backgroundColor: "white", // Fare ile üzerine gelindiğinde farklı bir mavi
+                    },
+                  }}
+                >
+                  Already have an account?
+                </Button>
+              ) : (
+                <Button color="inherit" onClick={handleBack} sx={{ mr: 1 }}>
+                  Back
+                </Button>
+              )}
+
               <Box sx={{ flex: "1 1 auto" }} />
               {/* {isStepOptional(activeStep) && (
                 <Button color="inherit" onClick={handleSkip} sx={{ mr: 1 }}>
@@ -397,6 +577,19 @@ export default function SignInSide() {
             </Box>
           </Box>
         </Box>
+        <Snackbar
+          open={openSnackbar}
+          autoHideDuration={6000}
+          onClose={handleCloseSnackbar}
+        >
+          <Alert
+            onClose={handleCloseSnackbar}
+            severity="success"
+            sx={{ width: "100%" }}
+          >
+            Account created successfully. 
+          </Alert>
+        </Snackbar>
       </Container>
     </ThemeProvider>
   );

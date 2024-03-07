@@ -1,6 +1,8 @@
 import axios from "axios";
 
-const API_BASE_URL = "https://solar-energy-app.azurewebsites.net";
+const API_BASE_URL1 = "https://solar-energy-app.azurewebsites.net";
+const API_BASE_URL = "http://localhost:3000";
+
 const api = axios.create({
   baseURL: API_BASE_URL,
   headers: {
@@ -47,6 +49,12 @@ export const ADDRESS = {
   },
 };
 
+export const COMPANY = {
+    postCompany: async (company) => {
+    return handleRequest(() => api.post("/companies/create-company", company));
+  },
+};
+
 export const USER = {
   login: async (email, password) => {
     const userInformation = {
@@ -56,13 +64,38 @@ export const USER = {
     return handleRequest(() => api.post("/users/login", userInformation));
   },
 
-  byId: async (id) => {
-    return handleRequest(() => api.get(`/customers/${id}`));
+  register: (user, company) => {
+    COMPANY.postCompany(company)
+      .then(companyResponse => {
+        console.log("responsecompany", companyResponse);
+  
+        // companyResponse içinden company_id'yi çıkarma
+        const companyId = companyResponse[0]._id; // ya da companyResponse.data.id gibi bir yapı olabilir, API'nize bağlı.
+        
+        user.company_id = companyId;
+        console.log("Company ID set for user:", companyId);
+        user.role = "company"
+        // Kullanıcı kaydı için bir sonraki adım
+        // Burada, handleRequest fonksiyonunuzu Promise tabanlı olarak kullanmanız gerekebilir,
+        // veya api.post(...) çağrısını doğrudan döndürebilirsiniz.
+        return handleRequest(() => api.post("/users/register", user));
+      })
+      .catch(error => {
+        // Hata yönetimi
+        console.error("Registration failed:", error);
+        throw new Error(`Registration failed: ${error}`);
+      });
   },
-  // postCustomer: async (customer) => {
-  //     return handleRequest(() => api.post('/customers', customer));
-  // },
-  putCustomer: async (customer) => {
-    return handleRequest(() => api.put(`/customers/${customer.id}`, customer));
-  },
-};
+  
+  
+
+    byId: async (id) => {
+      return handleRequest(() => api.get(`/customers/${id}`));
+    },
+    // postCustomer: async (customer) => {
+    //     return handleRequest(() => api.post('/customers', customer));
+    // },
+    putCustomer: async (customer) => {
+      return handleRequest(() => api.put(`/customers/${customer.id}`, customer));
+    },
+  };
