@@ -19,17 +19,6 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// const handleRequest = async (requestFunction) => {
-//   try {
-//     const response = await requestFunction();
-//     console.log("response: ", response);
-//     return [response.data, null];
-//   } catch (error) {
-//     console.log("Hata: ", error);
-//     return [null, error];
-//   }
-// };
-//burası chat düzeltti bir bakalım!!!!
 const handleRequest = async (requestFunction) => {
   try {
     const response = await requestFunction();
@@ -82,28 +71,25 @@ export const USER = {
     return handleRequest(() => api.post("/users/login", userInformation));
   },
 
-  register: (user, company) => {
-    COMPANY.postCompany(company)
-      .then((companyResponse) => {
-        console.log("responsecompany", companyResponse);
-
-        // companyResponse içinden company_id'yi çıkarma
-        const companyId = companyResponse[0]._id; // ya da companyResponse.data.id gibi bir yapı olabilir, API'nize bağlı.
-
-        user.company_id = companyId;
-        console.log("Company ID set for user:", companyId);
-        user.role = "company";
-        // Kullanıcı kaydı için bir sonraki adım
-        // Burada, handleRequest fonksiyonunuzu Promise tabanlı olarak kullanmanız gerekebilir,
-        // veya api.post(...) çağrısını doğrudan döndürebilirsiniz.
-        return handleRequest(() => api.post("/users/register", user));
-      })
-      .catch((error) => {
-        // Hata yönetimi
-        console.error("Registration failed:", error);
-        throw new Error(`Registration failed: ${error}`);
-      });
+   register: async (user, company) => {
+    try {
+      const companyResponse = await COMPANY.postCompany(company);
+      if (!companyResponse || !companyResponse[0]) {
+        throw new Error('Failed to create company');
+      }
+      const companyId = companyResponse[0]._id;
+      user.company_id = companyId;
+      user.role = "company_admin";
+      const userResponse = await handleRequest(() => api.post("/users/register", user));
+      if (!userResponse || !userResponse[0]) {
+        throw new Error('Failed to register user');
+      }
+      return [userResponse[0], null]; 
+    } catch (error) {
+      return [null, error]; 
+    }
   },
+
 
   getProfile: async () => {
     return handleRequest(() => api.get("/users/profile"));

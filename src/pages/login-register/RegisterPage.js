@@ -22,8 +22,6 @@ import Box from "@mui/material/Box";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { Snackbar, Alert } from "@mui/material";
-
-import { CUSTOMERS, ADDRESS, COMPANY } from "../../api/api";
 import { USER } from "../../api/api";
 
 const defaultTheme = createTheme();
@@ -88,10 +86,12 @@ export default function SignInSide() {
 
       delete userDetails.firstName;
       delete userDetails.lastName;
+      console.log("userlan: ", USER)
       const [response, error] = await USER.register(
         userDetails,
         companyDetails
       );
+      console.log("error: ",error)
       if (error) {
         console.error("Kayıt sırasında hata oluştu:", error);
       } else {
