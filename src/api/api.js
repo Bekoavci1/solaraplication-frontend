@@ -42,6 +42,9 @@ export const CUSTOMERS = {
   putCustomer: async (customer) => {
     return handleRequest(() => api.put(`/customers/${customer.id}`, customer));
   },
+  patchCustomer: async (id, customerData) => {
+    return handleRequest(() => api.patch(`/customers/${id}`, customerData));
+  },
 };
 
 export const ADDRESS = {

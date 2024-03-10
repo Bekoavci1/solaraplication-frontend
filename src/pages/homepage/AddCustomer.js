@@ -4,11 +4,10 @@ import { Box, Grid, Stack, Typography, TextField, Button } from "@mui/material";
 import { CUSTOMERS, ADDRESS } from "../../api/api";
 
 export default function AddCustomer() {
-  const { customerId } = useParams(); 
-  const navigate = useNavigate(); 
-  const [customerData, setCustomerData] = useState({
+  const { customerId } = useParams();
+  const navigate = useNavigate();
+  const [customer, setcustomer] = useState({
     name: "",
-    surname: "",
     email: "",
     street: "",
     houseNumber: "",
@@ -16,13 +15,13 @@ export default function AddCustomer() {
     city: "",
     postCode: "",
     addition: "",
-    vatNumber: "",
-    vatOffice: "",
+    vat_number: "",
+    vat_office: "",
     phone: "",
     mobile: "",
     notes: "",
   });
-
+//bura address eklenicek eğer yapacaksak update için 
   useEffect(() => {
     const fetchCustomerAndAddressData = async () => {
       if (customerId && customerId !== "undefined") {
@@ -45,9 +44,8 @@ export default function AddCustomer() {
           return;
         }
 
-        setCustomerData({
+        setcustomer({
           name: customerResponse.name || "",
-          surname: customerResponse.surname || "",
           email: customerResponse.email || "",
           street: addressResponse.street || "",
           houseNumber: addressResponse.house_number || "",
@@ -55,8 +53,8 @@ export default function AddCustomer() {
           city: addressResponse.city || "",
           postCode: addressResponse.postcode || "",
           addition: addressResponse.addition || "",
-          vatNumber: customerResponse.vat_number || "",
-          vatOffice: customerResponse.vat_office || "",
+          vat_number: customerResponse.vat_number || "",
+          vat_office: customerResponse.vat_office || "",
           phone: customerResponse.phone || "",
           mobile: customerResponse.mobile || "",
           notes: customerResponse.notes || "",
@@ -69,70 +67,35 @@ export default function AddCustomer() {
 
   const handleChange = (event) => {
     const { name, value } = event.target;
-    setCustomerData((prevState) => ({
+    setcustomer((prevState) => ({
       ...prevState,
       [name]: value,
     }));
   };
 
   const handleSubmit = async (event) => {
-  event.preventDefault();
+    event.preventDefault();
 
-  // Adres güncelleme işlemi
-  const addressData = {
-    street: customerData.street,
-    house_number: customerData.houseNumber,
-    country: customerData.country,
-    city: customerData.city,
-    postcode: customerData.postCode,
-    addition: customerData.addition,
+    const customerUpdateData = {
+      name: customer.name,
+      vat_number: customer.vat_number,
+      vat_office: customer.vat_office,
+      phone: customer.phone,
+      mobile: customer.mobile,
+      notes: customer.notes,
+    };
+
+    const [customerUpdateResponse, customerUpdateError] = await CUSTOMERS.patchCustomer(customerId, customerUpdateData);
+  
+    if (customerUpdateError) {
+      console.error("Error:", customerUpdateError);
+      return;
+    }
+  
+    console.log("Succses");
+    navigate("/paperbase");
   };
-
-  // Adres ID'sini almak için önce müşteri bilgisini çekin
-  const [customerResponse, customerError] = await CUSTOMERS.byId(customerId);
-
-  if (customerError) {
-    console.error("Müşteri bilgisi yüklenirken hata:", customerError);
-    return;
-  }
-
-  // Adresi güncelle
-  const [addressUpdateResponse, addressUpdateError] = await ADDRESS.putAddress({
-    ...addressData,
-    id: customerResponse.address_id, // Adresin ID'si buraya eklenmelidir
-  });
-
-  if (addressUpdateError) {
-    console.error("Adres güncellenirken hata oluştu:", addressUpdateError);
-    return;
-  }
-
-  // Müşteri bilgilerini güncelle (email hariç)
-  const customerUpdateData = {
-    name: customerData.name,
-    surname: customerData.surname,
-    // Email adresi burada güncellenmiyor
-    phone: customerData.phone,
-    mobile: customerData.mobile,
-    notes: customerData.notes,
-    vat_number: customerData.vatNumber,
-    vat_office: customerData.vatOffice,
-    // Adres ID'si değişmeyeceği için burada adres bilgisi gönderilmiyor
-  };
-
-  const [customerUpdateResponse, customerUpdateError] = await CUSTOMERS.putCustomer({
-    ...customerUpdateData,
-    id: customerId, // Müşterinin ID'si buraya eklenmelidir
-  });
-
-  if (customerUpdateError) {
-    console.error("Müşteri güncellenirken hata oluştu:", customerUpdateError);
-    return;
-  }
-
-  console.log("Müşteri ve adres başarıyla güncellendi");
-  navigate("/customers");
-};
+  
 
   return (
     <Grid container spacing={2}>
@@ -155,7 +118,7 @@ export default function AddCustomer() {
               name="name"
               label="Name"
               variant="standard"
-              value={customerData.name}
+              value={customer.name}
               onChange={handleChange}
               fullWidth
             />
@@ -166,9 +129,10 @@ export default function AddCustomer() {
             label="Email"
             type="email"
             variant="standard"
-            value={customerData.email}
+            value={customer.email}
             onChange={handleChange}
             fullWidth
+            disabled
             sx={{ mb: 2 }}
           />
 
@@ -185,9 +149,10 @@ export default function AddCustomer() {
             name="street"
             label="Street"
             variant="standard"
-            value={customerData.street}
+            value={customer.street}
             onChange={handleChange}
             fullWidth
+            disabled
             sx={{ mb: 2 }}
           />
           <Stack direction="row" spacing={2} sx={{ width: "100%", mb: 2 }}>
@@ -196,18 +161,20 @@ export default function AddCustomer() {
               name="houseNumber"
               label="House Number"
               variant="standard"
-              value={customerData.houseNumber}
+              value={customer.houseNumber}
               onChange={handleChange}
               fullWidth
+              disabled
             />
             <TextField
               id="country"
               name="country"
               label="Country"
               variant="standard"
-              value={customerData.country}
+              value={customer.country}
               onChange={handleChange}
               fullWidth
+              disabled
             />
           </Stack>
           <Stack direction="row" spacing={2} sx={{ width: "100%", mb: 2 }}>
@@ -216,18 +183,20 @@ export default function AddCustomer() {
               name="city"
               label="City"
               variant="standard"
-              value={customerData.city}
+              value={customer.city}
               onChange={handleChange}
               fullWidth
+              disabled
             />
             <TextField
               id="postCode"
               name="postCode"
               label="Post Code"
               variant="standard"
-              value={customerData.postCode}
+              value={customer.postCode}
               onChange={handleChange}
               fullWidth
+              disabled
             />
           </Stack>
           <TextField
@@ -235,12 +204,13 @@ export default function AddCustomer() {
             name="addition"
             label="Addition"
             variant="standard"
-            value={customerData.addition}
+            value={customer.addition}
             onChange={handleChange}
             multiline
             rows={2}
             fullWidth
             sx={{ mb: 2 }}
+            disabled
           />
 
           <Typography
@@ -253,20 +223,20 @@ export default function AddCustomer() {
           </Typography>
           <Stack direction="row" spacing={2} sx={{ width: "100%", mb: 2 }}>
             <TextField
-              id="vatNumber"
-              name="vatNumber"
+              id="vat_number"
+              name="vat_number"
               label="VAT Number"
               variant="standard"
-              value={customerData.vatNumber}
+              value={customer.vat_number}
               onChange={handleChange}
               fullWidth
             />
             <TextField
-              id="vatOffice"
-              name="vatOffice"
+              id="vat_office"
+              name="vat_office"
               label="VAT Office"
               variant="standard"
-              value={customerData.vatOffice}
+              value={customer.vat_office}
               onChange={handleChange}
               fullWidth
             />
@@ -277,7 +247,7 @@ export default function AddCustomer() {
               name="phone"
               label="Phone"
               variant="standard"
-              value={customerData.phone}
+              value={customer.phone}
               onChange={handleChange}
               fullWidth
             />
@@ -286,7 +256,7 @@ export default function AddCustomer() {
               name="mobile"
               label="Mobile"
               variant="standard"
-              value={customerData.mobile}
+              value={customer.mobile}
               onChange={handleChange}
               fullWidth
             />
@@ -296,7 +266,7 @@ export default function AddCustomer() {
             name="notes"
             label="Notes"
             variant="standard"
-            value={customerData.notes}
+            value={customer.notes}
             onChange={handleChange}
             multiline
             rows={4}
