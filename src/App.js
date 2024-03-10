@@ -62,6 +62,11 @@ function App() {
             <AddProject />
           </ProtectedRoute>
         } />
+        <Route path="/add-customer/:customerId" element={
+          <ProtectedRoute>
+            <AddCustomer />
+          </ProtectedRoute>
+        } />
       </Routes>
     </Router>
   );

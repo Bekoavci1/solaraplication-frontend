@@ -31,6 +31,7 @@ import AddCustomer from "./AddCustomer";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useEffect } from "react";
 import { CUSTOMERS, ADDRESS } from "../../api/api";
+import { useNavigate } from "react-router-dom";
 
 function createData(
   id,
@@ -438,6 +439,11 @@ export default function Customers() {
   const [searchInput, setSearchInput] = React.useState("");
   const [showAddCustomer, setShowAddCustomer] = React.useState(false); // Add state for showAddCustomer
   const [rows, setRows] = React.useState([]); // Change rows to state
+  const navigate = useNavigate();
+
+  const handleEditClick = (customerId) => {
+    navigate(`/add-customer/${customerId}`);
+  };
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -515,30 +521,32 @@ export default function Customers() {
     const fetchData = async () => {
       const userprofile = localStorage.getItem("userProfile");
       const userProfile = JSON.parse(userprofile);
-      console.log('userprofilebilgi', userProfile)
-    
+      console.log("userprofilebilgi", userProfile);
+
       const [customers, error] = await CUSTOMERS.getAll({
-        company_id: userProfile.company_id
+        company_id: userProfile.company_id,
       });
-    
+
       if (customers !== null) {
         // Fetch addresses for all customers concurrently
-        const addressPromises = customers.map((item) => ADDRESS.byId(item.address_id));
-    
+        const addressPromises = customers.map((item) =>
+          ADDRESS.byId(item.address_id)
+        );
+
         try {
           const addresses = await Promise.all(addressPromises);
-    
+
           // Update the rows with the fetched addresses
           const updatedCustomers = customers.map((item, index) => {
             return {
               ...item,
-              address: addresses[index][0]
+              address: addresses[index][0],
             };
           });
-    
+
           setRows(updatedCustomers);
         } catch (error) {
-          console.error('Error fetching addresses:', error);
+          console.error("Error fetching addresses:", error);
         }
       }
     };
@@ -620,9 +628,7 @@ export default function Customers() {
                       <TableCell align="left">
                         <Tooltip title="Edit">
                           <IconButton
-                            onClick={(event) => {
-                              event.stopPropagation();
-                            }}
+                            onClick={() => handleEditClick(row._id)}
                           >
                             <EditIcon />
                           </IconButton>
